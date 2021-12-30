@@ -1,0 +1,18 @@
+<resources>
+    <!-- Strings related to Splash Screen -->
+    <string name="app_name">Ecommerce SalesApp</string>
+    <string name="splashText">Buy and Sell Products</string>
+    <string name="splashButtonText">GET STARTED</string>
+    <!-- Strings related to login screen-->
+    <string name="nameTxtView">Enter Your Name</string>
+    <string name="emailTxtView">Enter Your Email</string>
+    <string name="passwordTxtView">Enter Your Password</string>
+    <string name="confirmPwdTxtView">Confirm Password</string>
+    <string name="signUpBtnTxt">REGISTER</string>
+    <string name="loginBtnTxt">LOGIN</string>
+    <string name="registrationFooterTxt">Already Have an Account?</string>
+    <string name="registrationFooterNoAct">Dont Have an Account?</string>
+    <string name="registratonFooterLoginTxt"><u>LOGIN</u></string>
+    <string name="registrationFooterSignupTxt"><u>SIGNUP</u></string>
+
+</resources>
