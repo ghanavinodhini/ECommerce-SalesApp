@@ -1,4 +1,4 @@
-package com.example.ecommercesalesapp
+package com.example.ecommercesalesapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
+import com.example.ecommercesalesapp.R
 import com.google.android.material.button.MaterialButton
 
 class SplashActivity : AppCompatActivity() {

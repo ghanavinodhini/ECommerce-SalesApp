@@ -1,4 +1,4 @@
-package com.example.ecommercesalesapp
+package com.example.ecommercesalesapp.view
 
 import android.os.Bundle
 import android.util.Log
@@ -8,8 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
+import com.example.ecommercesalesapp.R
+import com.example.ecommercesalesapp.viewModel.LoginRegisterViewModel
+import com.google.firebase.auth.FirebaseUser
 
 
 class LoginRegistrationFragment : Fragment() {
@@ -21,6 +29,23 @@ class LoginRegistrationFragment : Fragment() {
     lateinit var signUpBtn: Button
     lateinit var footerTxt: TextView
     lateinit var loginTxt: TextView
+    lateinit var loginRegisterViewModel: LoginRegisterViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //Assign value to viewModel, set observer for user change
+        /*loginRegisterViewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory
+                                    .getInstance(requireActivity().application)).get(loginRegisterViewModel.javaClass)*/
+        loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
+
+        loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(this, Observer<FirebaseUser>{
+            //Check if FirebaseUser not null
+            if(it != null){
+                Toast.makeText(context,"User Created",Toast.LENGTH_LONG).show()
+            }
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,6 +53,17 @@ class LoginRegistrationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.d("!!!", "Inside OnCreateView function in fragment")
+
+        //Assign value to viewModel, set observer for user change
+      /*  loginRegisterViewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory
+            .getInstance(requireActivity().application)).get(loginRegisterViewModel.javaClass)
+
+        loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(viewLifecycleOwner, Observer<FirebaseUser>{
+            //Check if FirebaseUser not null
+            if(it != null){
+                Toast.makeText(context,"User Created",Toast.LENGTH_LONG).show()
+            }
+        })*/
 
         //Get value from Splash Activity and store in variable in Fragment
         val myValue = this.getArguments()?.getString("profiletype")
@@ -47,6 +83,14 @@ class LoginRegistrationFragment : Fragment() {
 
             Log.d("!!!", "Inside loginTxt on clicklistener")
             displayFieldsInFragByValue(loginTxt.text.toString())
+
+        }
+
+        signUpBtn.setOnClickListener {
+
+            Log.d("!!!", "Inside signUp button click listener")
+            //connectFirebase(signUpBtn.text.toString())
+            implementFunctionalityByValue(signUpBtn.text.toString())
         }
 
         if (myValue != null) {
@@ -121,4 +165,62 @@ class LoginRegistrationFragment : Fragment() {
         passwordTxtView.setText("")
         confirmPwdTxtView.setText("")
     }
+
+    fun implementFunctionalityByValue(btnTextValue: String){
+        val registeredEmail = emailTxt.text.toString()
+        val registeredPassword = passwordTxtView.text.toString()
+
+        Log.d("!!!", "Inside implementFunctionalityByValue function")
+        if(btnTextValue.equals("Signup", ignoreCase = true)) {
+            if ((nameTxtView.text.toString().isEmpty()) || (emailTxt.text.toString()
+                    .isEmpty() || (passwordTxtView.text.toString().isEmpty()))
+            ) {
+                Log.d("!!!", "Please enter Name,Email & Password")
+                Toast.makeText(context, "Please Enter Name, Email  & Password", Toast.LENGTH_LONG)
+                    .show()
+            } else if (validateEmail(emailTxt.text.toString()) && validatePwd(passwordTxtView.text.toString())) {
+                //createUser(nameTxtView.text.toString(), emailTxt.text.toString(), passwordTxtView.text.toString())
+
+                    //Register user using FirebaseAuth
+                    loginRegisterViewModel.register(registeredEmail,registeredPassword)
+            }
+        }
+    }
+    fun validateEmail(email: String):Boolean{
+        if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        {
+            Log.d("!!!", "Valid Email Address Format")
+            return true
+
+        }
+        else
+        {
+            Log.d("!!!", "Invalid Email Address Format")
+            emailTxt.setError("Invalid Email Format")
+            return false
+        }
+
+    }
+
+    fun validatePwd(pwd: String):Boolean{
+
+        Log.d("!!!","Inside validate pwd function")
+        //Check if password is lessthan 6 characters
+        if(pwd.length<6)
+        {
+            Log.d("!!!", "Password character size: ${pwd.length}")
+            passwordTxtView.setError("Password should be greater than or equal to 6 characters")
+            return false
+        }else if (!(pwd.equals(confirmPwdTxtView.text.toString())))
+        {
+            confirmPwdTxtView.setError("Password did not match")
+            return false
+        }
+        else
+        {
+            Log.d("!!!", "Valid Password length")
+            return true
+        }
+    }
+
 }
