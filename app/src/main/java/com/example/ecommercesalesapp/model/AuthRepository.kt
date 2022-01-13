@@ -41,7 +41,7 @@ class AuthRepository {
         return userLoggedStatus
     }
 
-    fun register(email:String,password:String){
+    fun register(email:String,password:String,name:String){
         Log.d("!!!", "Inside register account")
         auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
@@ -60,7 +60,7 @@ class AuthRepository {
                         Log.d("!!!", "Document addded")
                     }*/
             } else {
-                Toast.makeText(app, "User Not added: " + task.exception, Toast.LENGTH_LONG)
+                Toast.makeText(app, "Registration failed: " + task.exception, Toast.LENGTH_LONG)
                     .show()
                 Log.d("!!!", "Task New User add Not Success: ${task.exception}")
 
@@ -77,8 +77,7 @@ class AuthRepository {
                     currentUser = auth.getCurrentUser()!!
                     Log.d("!!!", "current user: $currentUser")
                     firebaseUserMutableLiveData.postValue(currentUser)
-                    Toast.makeText(app, "Login successfull", Toast.LENGTH_SHORT).show()
-                    //displayMyExpensesActivity()
+                    Toast.makeText(app, "Login Successful", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(app, "Login Not Success: " + task.exception, Toast.LENGTH_LONG).show()
                     Log.d("!!!", "Login Not Success: ${task.exception}")

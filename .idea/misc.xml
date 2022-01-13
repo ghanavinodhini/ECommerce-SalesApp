@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/buttonborder.xml" value="0.103257328990228" />
         <entry key="app/src/main/res/drawable/ic_baseline_chevron_right_24.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.14895833333333333" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_login_registration.xml" value="0.14" />

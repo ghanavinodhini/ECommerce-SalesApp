@@ -1,5 +1,6 @@
 package com.example.ecommercesalesapp.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -42,7 +43,7 @@ class LoginRegistrationFragment : Fragment() {
         loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(this, Observer<FirebaseUser>{
             //Check if FirebaseUser not null
             if(it != null){
-                Toast.makeText(context,"User Created",Toast.LENGTH_LONG).show()
+                displayHomeActivity()
             }
         })
     }
@@ -169,6 +170,7 @@ class LoginRegistrationFragment : Fragment() {
     fun implementFunctionalityByValue(btnTextValue: String){
         val registeredEmail = emailTxt.text.toString()
         val registeredPassword = passwordTxtView.text.toString()
+        val registeredUsername = nameTxtView.text.toString()
 
         Log.d("!!!", "Inside implementFunctionalityByValue function")
         if(btnTextValue.equals("Signup", ignoreCase = true)) {
@@ -182,7 +184,21 @@ class LoginRegistrationFragment : Fragment() {
                 //createUser(nameTxtView.text.toString(), emailTxt.text.toString(), passwordTxtView.text.toString())
 
                     //Register user using FirebaseAuth
-                    loginRegisterViewModel.register(registeredEmail,registeredPassword)
+                    loginRegisterViewModel.register(registeredEmail,registeredPassword,registeredUsername)
+            }
+        }
+
+        else if(btnTextValue.equals("Login", ignoreCase = true))
+        {
+            Log.d("!!!","Button Text value: $btnTextValue")
+            if(validateEmail(emailTxt.text.toString()))
+            {
+                Log.d("!!!","Before calling loginUser function")
+                loginRegisterViewModel.login(emailTxt.text.toString(),passwordTxtView.text.toString())
+            }
+            else{
+                Log.d("!!!","Valid Email and Password not entered")
+                Toast.makeText(context, "Please Enter Valid Email & Password", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -221,6 +237,14 @@ class LoginRegistrationFragment : Fragment() {
             Log.d("!!!", "Valid Password length")
             return true
         }
+    }
+
+    fun displayHomeActivity()
+    {
+        //Call new Activity from fragment
+        val intent = Intent(activity,HomeActivity::class.java)
+        activity?.startActivity(intent)
+        activity?.finish()
     }
 
 }

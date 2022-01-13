@@ -26,8 +26,8 @@ class LoginRegisterViewModel(application: Application) : AndroidViewModel(applic
         userLoggedStatus = authRepository.getUserLoggedStatus()
     }
 
-    fun register(email : String, password: String){
-        authRepository.register(email,password)
+    fun register(email : String, password: String,name: String){
+        authRepository.register(email,password,name)
     }
 
     fun login(userEmail : String, userPassword: String){

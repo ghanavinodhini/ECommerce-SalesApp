@@ -10,6 +10,7 @@
     <string name="confirmPwdTxtView">Confirm Password</string>
     <string name="signUpBtnTxt">SIGNUP</string>
     <string name="loginBtnTxt">LOGIN</string>
+    <string name="logoutBtnTxt">LOGOUT</string>
     <string name="registrationFooterTxt">Already Have an Account?</string>
     <string name="registrationFooterNoAct">Dont Have an Account?</string>
     <string name="registratonFooterLoginTxt"><u>LOGIN</u></string>

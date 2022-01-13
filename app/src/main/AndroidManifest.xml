@@ -10,11 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTheme">
         <activity
+            android:name=".view.HomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.SplashActivity"
-            android:theme="@style/Theme.MyTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.MyTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
