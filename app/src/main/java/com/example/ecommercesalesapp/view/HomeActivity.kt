@@ -5,21 +5,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import androidx.compose.ui.text.toUpperCase
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommercesalesapp.R
-import com.example.ecommercesalesapp.viewModel.HomeViewModel
+import com.example.ecommercesalesapp.adapter.AllProductsRecyclerAdapter
+import com.example.ecommercesalesapp.viewModel.AllProductsViewModel
 import com.example.ecommercesalesapp.viewModel.LoginRegisterViewModel
-import com.google.android.gms.common.api.internal.ActivityLifecycleObserver.of
 import com.google.firebase.auth.FirebaseUser
 
 class HomeActivity : AppCompatActivity() {
     lateinit var userNameTextView:TextView
     lateinit var signOutButton : Button
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
+    lateinit var allProductsViewModel: AllProductsViewModel
+    lateinit var allProductsRecyclerView: RecyclerView
+    lateinit var allProductsRecyclerAdapter: AllProductsRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +29,12 @@ class HomeActivity : AppCompatActivity() {
 
         userNameTextView = findViewById(R.id.userNameTextView)
         signOutButton = findViewById(R.id.logoutButton)
-
+        allProductsRecyclerView = findViewById(R.id.allProductsRecyclerView)
 
 
         loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
 
-        //Set Observer
+        //Set Observer for Firebase User
         loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(this, Observer<FirebaseUser>{
             //Check if FirebaseUser not null
             if(it != null){
@@ -54,6 +56,17 @@ class HomeActivity : AppCompatActivity() {
         signOutButton.setOnClickListener {
             loginRegisterViewModel.logout()
         }
+
+        allProductsViewModel = ViewModelProvider(this).get(AllProductsViewModel::class.java)
+
+        //Set Observer for allProductsList
+        allProductsViewModel.getAllProductsListMutableLiveData().observe(this, Observer {allProductsViewModel->
+
+            allProductsRecyclerAdapter = AllProductsRecyclerAdapter(this@HomeActivity,allProductsViewModel!!)
+            allProductsRecyclerView!!.setLayoutManager(LinearLayoutManager(this@HomeActivity))
+            allProductsRecyclerView!!.setAdapter(allProductsRecyclerAdapter)
+        }
+        )
     }
 
     private fun displaySplashScreen(){

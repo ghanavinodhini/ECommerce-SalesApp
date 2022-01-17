@@ -11,12 +11,14 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthRepository {
     private var app : Application
     private var firebaseUserMutableLiveData : MutableLiveData<FirebaseUser>
     private var userLoggedStatus : MutableLiveData<Boolean>
     private var auth : FirebaseAuth
+    lateinit var db: FirebaseFirestore
     private lateinit var currentUser : FirebaseUser
 
 
@@ -25,6 +27,7 @@ class AuthRepository {
         firebaseUserMutableLiveData = MutableLiveData()
         userLoggedStatus = MutableLiveData(false)
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         //Check if currentuser available
         if(auth.currentUser != null){
@@ -52,13 +55,13 @@ class AuthRepository {
                 firebaseUserMutableLiveData.postValue(currentUser)
                 Toast.makeText(app, "SignUp successfull", Toast.LENGTH_SHORT).show()
 
-
-               /* val newUserDetails = hashMapOf("Name" to name, "Email" to email)
+                // Add to users collection in Firestore
+                val newUserDetails = hashMapOf("Name" to name, "Email" to email)
                 db.collection("users").document(auth.currentUser!!.uid)
                     .set(newUserDetails)
                     .addOnSuccessListener { documentReference ->
                         Log.d("!!!", "Document addded")
-                    }*/
+                    }
             } else {
                 Toast.makeText(app, "Registration failed: " + task.exception, Toast.LENGTH_LONG)
                     .show()
