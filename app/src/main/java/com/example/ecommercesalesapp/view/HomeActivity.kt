@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser
 class HomeActivity : AppCompatActivity() {
     lateinit var userNameTextView:TextView
     lateinit var signOutButton : Button
+    lateinit var postAdButton : Button
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
     lateinit var allProductsViewModel: AllProductsViewModel
     lateinit var allProductsRecyclerView: RecyclerView
@@ -29,6 +30,7 @@ class HomeActivity : AppCompatActivity() {
 
         userNameTextView = findViewById(R.id.userNameTextView)
         signOutButton = findViewById(R.id.logoutButton)
+        postAdButton = findViewById(R.id.postAdbutton)
         allProductsRecyclerView = findViewById(R.id.allProductsRecyclerView)
 
 
@@ -57,6 +59,10 @@ class HomeActivity : AppCompatActivity() {
             loginRegisterViewModel.logout()
         }
 
+        postAdButton.setOnClickListener {
+            displayCreateAdvertisement()
+        }
+
         allProductsViewModel = ViewModelProvider(this).get(AllProductsViewModel::class.java)
 
         //Set Observer for allProductsList
@@ -67,6 +73,12 @@ class HomeActivity : AppCompatActivity() {
             allProductsRecyclerView!!.setAdapter(allProductsRecyclerAdapter)
         }
         )
+    }
+
+    private fun displayCreateAdvertisement(){
+        val createAdIntent = Intent(this,CreateAdvertisementActivity::class.java)
+        startActivity(createAdIntent)
+        finish()
     }
 
     private fun displaySplashScreen(){

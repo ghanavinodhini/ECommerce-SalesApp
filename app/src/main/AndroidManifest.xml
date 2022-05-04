@@ -13,6 +13,9 @@
             android:name=".view.HomeActivity"
             android:exported="false" />
         <activity
+            android:name=".view.CreateAdvertisementActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.MyTheme">
