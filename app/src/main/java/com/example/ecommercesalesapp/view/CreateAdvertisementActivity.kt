@@ -11,11 +11,18 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommercesalesapp.R
+import com.example.ecommercesalesapp.adapter.CreateAdImagesAdapter
 import com.example.ecommercesalesapp.model.AllProducts
+import com.example.ecommercesalesapp.model.CreateAdImages
+import com.example.ecommercesalesapp.model.DataManager
 import com.example.ecommercesalesapp.viewModel.CreateAdvertisementViewModel
 import com.example.ecommercesalesapp.viewModel.LoginRegisterViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import org.json.JSONArray
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,10 +34,15 @@ class CreateAdvertisementActivity : AppCompatActivity() {
     lateinit var productPrice : TextView
     lateinit var productDesc : TextView
     lateinit var uid : String
-    // lateinit var galleryUriList : ArrayList<String>
+    lateinit var newAdvertisementId: String
+    lateinit var galleryAdvertisementId: String
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
     lateinit var createAdvertisementViewModel: CreateAdvertisementViewModel
-
+    lateinit var db: FirebaseFirestore
+    lateinit var auth: FirebaseAuth
+     var imageGalleryActivity = ImageGalleryActivity()
+    private lateinit var  createAdImagesAdapter: CreateAdImagesAdapter
+    private var createAdImagesList = mutableListOf<CreateAdImages>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +54,19 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         productPrice = findViewById(R.id.editTextNewProductPrice)
         productDesc = findViewById(R.id.editTextNewProductDesc)
 
+        db = FirebaseFirestore.getInstance()
+        //Initialise Firebase Auth
+        auth = FirebaseAuth.getInstance()
+
         getIntentValue()
+        //loadGridImageData()
+
+
+      /*  createAdImagesAdapter = CreateAdImagesAdapter(applicationContext)
+        postAdImagesRecyclerView.adapter = createAdImagesAdapter*/
+
+
+       // createAdImagesAdapter.setImagesDataList(list)
 
         createAdvertisementViewModel = ViewModelProvider(this).get(CreateAdvertisementViewModel::class.java)
         loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
@@ -90,13 +114,59 @@ class CreateAdvertisementActivity : AppCompatActivity() {
 
     fun getIntentValue(){
         Log.d("!!!", "Inside getintent create ad activity")
-        val galleryUriList = intent.getSerializableExtra("gallerySelectedImagesList")
-        Log.d("!!!", "get intent value uri string list : $galleryUriList")
+       /* val galleryUriList = intent.getSerializableExtra("gallerySelectedImagesList")
+        Log.d("!!!", "get intent value uri string list : $galleryUriList")*/
+        galleryAdvertisementId = intent.getStringExtra("galleryAdID").toString()
+        if(galleryAdvertisementId != ""){
+            loadGridImageData()
+        }
+
+    }
+
+    fun loadGridImageData(){
+        Log.d("!!!", "Inside loadGridImages create ad activity")
+
+        //initiate the grid  view
+        //in this case I make row grid in a row
+        //if you want to change that change the number
+        postAdImagesRecyclerView.layoutManager = GridLayoutManager(applicationContext,2)
+        postAdImagesRecyclerView.adapter = CreateAdImagesAdapter(this,DataManager.allGridImages)
+        Log.d("!!!", "DataManager allgrid images: " + DataManager.allGridImages)
+         db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",galleryAdvertisementId).get()
+            .addOnSuccessListener {
+                Log.d("!!!", "Iside successlisener")
+                val snapshotList = it.documents
+                Log.d("!!!", "Snapshot List: $snapshotList")
+                DataManager.allGridImages.clear()
+                for(snapshot in snapshotList) {
+                    Log.d("!!!", "Images data: " + snapshot.getData())
+                    Log.d("!!!", "product gallery image url: " + snapshot.get("productGalleryImageUrl"))
+                    val snapshotUri = snapshot.get("productGalleryImageUrl").toString()
+                    Log.d("!!!", "SnapshotUri: $snapshotUri")
+                    DataManager.allGridImages.add(CreateAdImages(snapshotUri))
+                }
+            }
+            .addOnFailureListener {
+                Log.d("!!!", "Exception in snapshot: ${it.message}")
+            }
+        postAdImagesRecyclerView.adapter?.notifyDataSetChanged()
+     /*   val list = imageGalleryActivity.uriList
+        Log.d("!!!", "Inside loadGridImages create ad activity list variable value : $list")
+        for(galleryUriString in list)
+        {
+            Log.d("!!!", "gallerySel IMage inside for loop: $galleryUriString")
+            //createAdImagesList.add(CreateAdImages(l))
+            val imageData = CreateAdImages(galleryUriString)
+            DataManager.allGridImages.add(imageData)
+        }
+
+        postAdImagesRecyclerView.adapter?.notifyDataSetChanged()*/
     }
 
     fun saveNewProduct(){
         val newProduct = AllProducts()
         newProduct.productAdvertsementId = UUID.randomUUID().toString()
+        newAdvertisementId = newProduct.productAdvertsementId.toString()
         newProduct.productTitle = productTitle.text.toString()
         newProduct.productPrice = productPrice.text.toString()
         newProduct.productDescription = productDesc.text.toString()
@@ -110,7 +180,8 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         createAdvertisementViewModel.addStatus.observe(this, androidx.lifecycle.Observer {
             if (it == true){
                 Toast.makeText(this,"New Product saved successfully",Toast.LENGTH_SHORT).show()
-                displayHomeActivity()
+                //displayHomeActivity()
+                displayImageGalleryActivity()
             }
             else{
                 Toast.makeText(this,"Error in saving new product",Toast.LENGTH_SHORT).show()
@@ -132,6 +203,8 @@ class CreateAdvertisementActivity : AppCompatActivity() {
 
     fun displayImageGalleryActivity(){
         val intent = Intent(this, ImageGalleryActivity::class.java)
+        Log.d("!!!", "Advertisement ID: $newAdvertisementId")
+        intent.putExtra("productAdID",newAdvertisementId )
         startActivity(intent)
         finish()
     }

@@ -77,8 +77,9 @@ class HomeActivity : AppCompatActivity() {
 
     private fun displayCreateAdvertisement(){
         val createAdIntent = Intent(this,CreateAdvertisementActivity::class.java)
-          var dummyIntentList = arrayListOf("list items here")
+          val dummyIntentList = arrayListOf("list items here")
         createAdIntent.putExtra("gallerySelectedImagesList", dummyIntentList)
+        createAdIntent.putExtra("galleryAdID","" )
         startActivity(createAdIntent)
         finish()
     }
