@@ -40,7 +40,6 @@ class HomeActivity : AppCompatActivity() {
         loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(this, Observer<FirebaseUser>{
             //Check if FirebaseUser not null
             if(it != null){
-                //Toast.makeText(context,"User Created",Toast.LENGTH_LONG).show()
                 userNameTextView.setText("WELCOME " + it.email?.toUpperCase())
 
             }
@@ -49,7 +48,6 @@ class HomeActivity : AppCompatActivity() {
         loginRegisterViewModel.getUserLoggedStatus().observe(this, Observer<Boolean>{
             //Check if FirebaseUser loggedOut is true
             if(it){
-                //Toast.makeText(context,"User Created",Toast.LENGTH_LONG).show()
                displaySplashScreen()
 
             }
@@ -63,37 +61,29 @@ class HomeActivity : AppCompatActivity() {
             displayCreateAdvertisement()
         }
 
-        allProductsViewModel = ViewModelProvider(this).get(AllProductsViewModel::class.java)
+      // allProductsViewModel = ViewModelProvider(this).get(AllProductsViewModel::class.java)
 
         //Set Observer for allProductsList
-        allProductsViewModel.getAllProductsListMutableLiveData().observe(this, Observer {allProductsViewModel->
+      /*  allProductsViewModel.getAllProductsListMutableLiveData().observe(this, Observer {allProductsViewModel->
 
             allProductsRecyclerAdapter = AllProductsRecyclerAdapter(this@HomeActivity,allProductsViewModel!!)
-            allProductsRecyclerView!!.setLayoutManager(LinearLayoutManager(this@HomeActivity))
-            allProductsRecyclerView!!.setAdapter(allProductsRecyclerAdapter)
+            allProductsRecyclerView.setLayoutManager(LinearLayoutManager(this@HomeActivity))
+            allProductsRecyclerView.setAdapter(allProductsRecyclerAdapter)
+            allProductsRecyclerAdapter.notifyDataSetChanged()
         }
-        )
+        )*/
+
     }
 
     private fun displayCreateAdvertisement(){
         val createAdIntent = Intent(this,CreateAdvertisementActivity::class.java)
+          var dummyIntentList = arrayListOf("list items here")
+        createAdIntent.putExtra("gallerySelectedImagesList", dummyIntentList)
         startActivity(createAdIntent)
         finish()
     }
 
     private fun displaySplashScreen(){
-        //Call fragment from Activity
-      /* val loginRegisterFragment = LoginRegistrationFragment()
-        val fragment : Fragment? =
-
-        supportFragmentManager.findFragmentByTag(loginRegisterFragment::class.java.simpleName)
-
-        if(fragment !is LoginRegistrationFragment){
-            supportFragmentManager.beginTransaction()
-                .add(R.id.loginRegisterFragment, loginRegisterFragment, LoginRegistrationFragment::class.java.simpleName)
-                .commit()
-        }*/
-
         //Call new Activity from fragment
         val intent = Intent(this,SplashActivity::class.java)
         startActivity(intent)

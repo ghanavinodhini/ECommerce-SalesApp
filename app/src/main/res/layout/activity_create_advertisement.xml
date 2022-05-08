@@ -22,6 +22,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:id="@+id/editTextNewProductTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/edit_text_border"
+        android:ems="10"
+        android:minHeight="48dp"
+        android:hint="ENTER PRODUCT NAME"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postAdImagesRecyclerView" />
+
+    <EditText
         android:id="@+id/editTextNewProductPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,7 +52,7 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postAdImagesRecyclerView" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNewProductTitle" />
 
     <EditText
         android:id="@+id/editTextNewProductDesc"
