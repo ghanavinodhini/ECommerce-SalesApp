@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,7 @@ import com.example.ecommercesalesapp.viewModel.CreateAdvertisementViewModel
 import com.example.ecommercesalesapp.viewModel.LoginRegisterViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import org.json.JSONArray
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,13 +31,15 @@ import kotlin.collections.ArrayList
 class CreateAdvertisementActivity : AppCompatActivity() {
 
     lateinit var postAdImagesRecyclerView : RecyclerView
-    lateinit var saveAdButton : Button
+    lateinit var newAdNextButton : Button
+    lateinit var okButton : Button
     lateinit var productTitle : TextView
     lateinit var productPrice : TextView
     lateinit var productDesc : TextView
     lateinit var uid : String
     lateinit var newAdvertisementId: String
     lateinit var galleryAdvertisementId: String
+    lateinit var mainImageUrlId: String
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
     lateinit var createAdvertisementViewModel: CreateAdvertisementViewModel
     lateinit var db: FirebaseFirestore
@@ -49,7 +53,8 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_advertisement)
 
         postAdImagesRecyclerView = findViewById(R.id.postAdImagesRecyclerView)
-        saveAdButton = findViewById(R.id.postNewAdButton)
+        newAdNextButton = findViewById(R.id.postNewAdNextButton)
+        okButton = findViewById(R.id.okButton)
         productTitle = findViewById(R.id.editTextNewProductTitle)
         productPrice = findViewById(R.id.editTextNewProductPrice)
         productDesc = findViewById(R.id.editTextNewProductDesc)
@@ -83,7 +88,7 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Save ad details to DB
-        saveAdButton.setOnClickListener {
+        newAdNextButton.setOnClickListener {
             saveNewProduct()
             saveStatus()
         }
@@ -119,8 +124,8 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         galleryAdvertisementId = intent.getStringExtra("galleryAdID").toString()
         if(galleryAdvertisementId != ""){
             loadGridImageData()
+            getProductDetails()
         }
-
     }
 
     fun loadGridImageData(){
@@ -138,6 +143,8 @@ class CreateAdvertisementActivity : AppCompatActivity() {
                 val snapshotList = it.documents
                 Log.d("!!!", "Snapshot List: $snapshotList")
                 DataManager.allGridImages.clear()
+                mainImageUrlId = snapshotList[0].get("productGalleryImageUrl").toString()
+                Log.d("!!!", "Inside successlisener 1st imageurl id: $mainImageUrlId")
                 for(snapshot in snapshotList) {
                     Log.d("!!!", "Images data: " + snapshot.getData())
                     Log.d("!!!", "product gallery image url: " + snapshot.get("productGalleryImageUrl"))
@@ -161,6 +168,52 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         }
 
         postAdImagesRecyclerView.adapter?.notifyDataSetChanged()*/
+
+        /* To update field */
+        val ref = db.collection("products")
+        ref.whereEqualTo("productId",galleryAdvertisementId).get().addOnCompleteListener {
+            if(it.isSuccessful){
+                for(doc in it.result!!){
+                    Log.d("!!!", "Inside doc result: $doc")
+                    val uriUpdate: MutableMap<String, Any> = HashMap()
+                    uriUpdate["productImageUri"] = mainImageUrlId
+                    ref.document(doc.id).set(uriUpdate, SetOptions.merge())
+                }
+            }
+        }
+    }
+
+    fun getProductDetails(){
+        db.collection("products").whereEqualTo("productId",galleryAdvertisementId).get()
+            .addOnSuccessListener {
+                Log.d("!!!", "Iside successlisener")
+                val snapshotList = it.documents
+                Log.d("!!!", "Snapshot List: $snapshotList")
+                for(snapshot in snapshotList) {
+                    Log.d("!!!", "Products data: " + snapshot.getData())
+                    val productTitle = snapshot.get("productTitle").toString()
+                    val productPrice = snapshot.get("productPrice").toString()
+                    val productDesc = snapshot.get("productDesc").toString()
+                    Log.d("!!!", "Product Title: $productTitle, Product Price: $productPrice, Product Desc: $productDesc")
+                    displayProductDetails(productTitle,productPrice,productDesc)
+                }
+            }
+            .addOnFailureListener {
+                Log.d("!!!", "Exception in snapshot: ${it.message}")
+            }
+    }
+
+    fun displayProductDetails(productTitle:String, productPrice:String, productDesc:String){
+        this.productTitle.text = productTitle
+        this.productPrice.text = productPrice
+        this.productDesc.text = productDesc
+
+        this.productTitle.isEnabled = false
+        this.productPrice.isEnabled = false
+        this.productDesc.isEnabled = false
+
+        okButton.isVisible = true
+        newAdNextButton.isVisible = false
     }
 
     fun saveNewProduct(){
