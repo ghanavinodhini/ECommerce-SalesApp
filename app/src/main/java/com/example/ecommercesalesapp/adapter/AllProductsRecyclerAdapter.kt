@@ -1,6 +1,7 @@
 package com.example.ecommercesalesapp.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,12 +30,12 @@ class AllProductsRecyclerAdapter(private val context: Context, private val produ
     }
 
     override fun onBindViewHolder(holder: AllProductsViewHolder, position: Int) {
-
         val allProductsViewModel = productsArrayList[position]
         holder.bind(allProductsViewModel)
     }
 
     override fun getItemCount(): Int {
+        Log.d("!!!","Inside recycler Item count: " + productsArrayList.size)
         return productsArrayList.size
     }
 

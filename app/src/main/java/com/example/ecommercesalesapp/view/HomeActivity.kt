@@ -61,17 +61,17 @@ class HomeActivity : AppCompatActivity() {
             displayCreateAdvertisement()
         }
 
-      // allProductsViewModel = ViewModelProvider(this).get(AllProductsViewModel::class.java)
+       allProductsViewModel = ViewModelProvider(this).get(AllProductsViewModel::class.java)
 
         //Set Observer for allProductsList
-      /*  allProductsViewModel.getAllProductsListMutableLiveData().observe(this, Observer {allProductsViewModel->
+        allProductsViewModel.getAllProductsListMutableLiveData().observe(this, Observer {allProductsViewModel->
 
             allProductsRecyclerAdapter = AllProductsRecyclerAdapter(this@HomeActivity,allProductsViewModel!!)
             allProductsRecyclerView.setLayoutManager(LinearLayoutManager(this@HomeActivity))
             allProductsRecyclerView.setAdapter(allProductsRecyclerAdapter)
             allProductsRecyclerAdapter.notifyDataSetChanged()
         }
-        )*/
+        )
 
     }
 

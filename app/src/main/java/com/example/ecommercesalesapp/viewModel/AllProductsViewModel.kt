@@ -17,6 +17,7 @@ class AllProductsViewModel : ViewModel {
 
      var db: FirebaseFirestore
 
+     constructor() : super()
      constructor(allProducts: AllProducts) : super()
     {
         Log.d("!!!", "Inside AllProductsViewModel constructor ")
@@ -72,6 +73,7 @@ class AllProductsViewModel : ViewModel {
 
                     val allProductsViewModel = AllProductsViewModel(allProducts)
                     allProductsList.add(allProductsViewModel)
+                    Log.d("!!!", "All Products List inside getAllProducts in adapter: $allProductsList")
 
                 }
             }
@@ -83,3 +85,4 @@ class AllProductsViewModel : ViewModel {
         return allProductListMutableLiveData
     }
 }
+

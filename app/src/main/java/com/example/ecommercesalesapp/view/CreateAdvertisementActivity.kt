@@ -152,6 +152,8 @@ class CreateAdvertisementActivity : AppCompatActivity() {
                     Log.d("!!!", "SnapshotUri: $snapshotUri")
                     DataManager.allGridImages.add(CreateAdImages(snapshotUri))
                 }
+                /* To update field */
+                updateImageUrlField()
             }
             .addOnFailureListener {
                 Log.d("!!!", "Exception in snapshot: ${it.message}")
@@ -169,7 +171,10 @@ class CreateAdvertisementActivity : AppCompatActivity() {
 
         postAdImagesRecyclerView.adapter?.notifyDataSetChanged()*/
 
-        /* To update field */
+
+    }
+
+    fun updateImageUrlField(){
         val ref = db.collection("products")
         ref.whereEqualTo("productId",galleryAdvertisementId).get().addOnCompleteListener {
             if(it.isSuccessful){
