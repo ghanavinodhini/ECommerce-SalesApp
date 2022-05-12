@@ -136,20 +136,14 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         //if you want to change that change the number
         postAdImagesRecyclerView.layoutManager = GridLayoutManager(applicationContext,2)
         postAdImagesRecyclerView.adapter = CreateAdImagesAdapter(this,DataManager.allGridImages)
-        Log.d("!!!", "DataManager allgrid images: " + DataManager.allGridImages)
+
          db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",galleryAdvertisementId).get()
             .addOnSuccessListener {
-                Log.d("!!!", "Iside successlisener")
                 val snapshotList = it.documents
-                Log.d("!!!", "Snapshot List: $snapshotList")
                 DataManager.allGridImages.clear()
                 mainImageUrlId = snapshotList[0].get("productGalleryImageUrl").toString()
-                Log.d("!!!", "Inside successlisener 1st imageurl id: $mainImageUrlId")
                 for(snapshot in snapshotList) {
-                    Log.d("!!!", "Images data: " + snapshot.getData())
-                    Log.d("!!!", "product gallery image url: " + snapshot.get("productGalleryImageUrl"))
                     val snapshotUri = snapshot.get("productGalleryImageUrl").toString()
-                    Log.d("!!!", "SnapshotUri: $snapshotUri")
                     DataManager.allGridImages.add(CreateAdImages(snapshotUri))
                 }
                 /* To update field */
@@ -159,19 +153,6 @@ class CreateAdvertisementActivity : AppCompatActivity() {
                 Log.d("!!!", "Exception in snapshot: ${it.message}")
             }
         postAdImagesRecyclerView.adapter?.notifyDataSetChanged()
-     /*   val list = imageGalleryActivity.uriList
-        Log.d("!!!", "Inside loadGridImages create ad activity list variable value : $list")
-        for(galleryUriString in list)
-        {
-            Log.d("!!!", "gallerySel IMage inside for loop: $galleryUriString")
-            //createAdImagesList.add(CreateAdImages(l))
-            val imageData = CreateAdImages(galleryUriString)
-            DataManager.allGridImages.add(imageData)
-        }
-
-        postAdImagesRecyclerView.adapter?.notifyDataSetChanged()*/
-
-
     }
 
     fun updateImageUrlField(){

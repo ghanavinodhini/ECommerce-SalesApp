@@ -3,6 +3,7 @@ package com.example.ecommercesalesapp.model
 object DataManager {
     val allGridImages = mutableListOf<CreateAdImages>()
 
+    val allProductDetails = mutableListOf<AllProducts>()
 
 
     init {

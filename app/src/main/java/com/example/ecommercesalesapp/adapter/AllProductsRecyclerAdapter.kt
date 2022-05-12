@@ -1,10 +1,13 @@
 package com.example.ecommercesalesapp.adapter
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.allViews
@@ -13,9 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommercesalesapp.R
 import com.example.ecommercesalesapp.databinding.AllProductsBinding
 import com.example.ecommercesalesapp.model.AllProducts
+import com.example.ecommercesalesapp.view.DisplayProductDetailsActivity
 import com.example.ecommercesalesapp.viewModel.AllProductsViewModel
 
-class AllProductsRecyclerAdapter(private val context: Context, private val productsArrayList : ArrayList<AllProductsViewModel>) : RecyclerView.Adapter<AllProductsRecyclerAdapter.AllProductsViewHolder>()
+class AllProductsRecyclerAdapter(private val context: Context, private val productsArrayList : ArrayList<AllProductsViewModel>,private val productListener: onProductClickListener) : RecyclerView.Adapter<AllProductsRecyclerAdapter.AllProductsViewHolder>()
 {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllProductsViewHolder
@@ -31,7 +35,16 @@ class AllProductsRecyclerAdapter(private val context: Context, private val produ
 
     override fun onBindViewHolder(holder: AllProductsViewHolder, position: Int) {
         val allProductsViewModel = productsArrayList[position]
-        holder.bind(allProductsViewModel)
+       holder.bind(allProductsViewModel)
+
+        holder.itemView.setOnClickListener {
+           /* val activity = holder.itemView.context as Activity
+            val intent = Intent(activity, DisplayProductDetailsActivity::class.java)
+            intent.putExtra(productsArrayList)[position]
+            startActivity(intent)*/
+
+            productListener.onProductClicked(position,productsArrayList[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -53,8 +66,10 @@ class AllProductsRecyclerAdapter(private val context: Context, private val produ
             allProductsBinding.executePendingBindings()
         }
 
+
     }
+}
 
-
-
+interface onProductClickListener{
+    fun onProductClicked(position: Int, product: AllProductsViewModel)
 }

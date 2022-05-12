@@ -3,25 +3,30 @@ package com.example.ecommercesalesapp.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommercesalesapp.R
 import com.example.ecommercesalesapp.adapter.AllProductsRecyclerAdapter
+import com.example.ecommercesalesapp.adapter.onProductClickListener
+import com.example.ecommercesalesapp.model.AllProducts
 import com.example.ecommercesalesapp.model.DataManager
 import com.example.ecommercesalesapp.viewModel.AllProductsViewModel
 import com.example.ecommercesalesapp.viewModel.LoginRegisterViewModel
 import com.google.firebase.auth.FirebaseUser
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(),onProductClickListener {
     lateinit var userNameTextView:TextView
     lateinit var signOutButton : Button
     lateinit var postAdButton : Button
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
     lateinit var allProductsViewModel: AllProductsViewModel
+    var allProducts = MutableLiveData<ArrayList<AllProducts>>()
     lateinit var allProductsRecyclerView: RecyclerView
     lateinit var allProductsRecyclerAdapter: AllProductsRecyclerAdapter
 
@@ -67,23 +72,13 @@ class HomeActivity : AppCompatActivity() {
         //Set Observer for allProductsList
         allProductsViewModel.getAllProductsListMutableLiveData().observe(this, Observer {allProductsViewModel->
 
-            allProductsRecyclerAdapter = AllProductsRecyclerAdapter(this@HomeActivity,allProductsViewModel!!)
+            allProductsRecyclerAdapter = AllProductsRecyclerAdapter(this@HomeActivity,allProductsViewModel!!,this)
             allProductsRecyclerView.setLayoutManager(LinearLayoutManager(this@HomeActivity))
             allProductsRecyclerView.setAdapter(allProductsRecyclerAdapter)
-            //allProductsRecyclerAdapter.notifyDataSetChanged()
         }
         )
-
-       // loadAllProductsData()
-
     }
 
-   /* private fun loadAllProductsData(){
-        allProductsRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        allProductsRecyclerView.setAdapter(allProductsRecyclerAdapter)
-
-
-    }*/
 
     private fun displayCreateAdvertisement(){
         val createAdIntent = Intent(this,CreateAdvertisementActivity::class.java)
@@ -100,5 +95,14 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
 
+    }
+
+    override fun onProductClicked(position: Int, product: AllProductsViewModel) {
+        val intent = Intent(this, DisplayProductDetailsActivity::class.java)
+        Log.d("!!!","Recyclerview product clicked: " + product)
+        Log.d("!!!","Recyclerview productid clicked: " + product.productId)
+        Log.d("!!!","Recyclerview product name clicked: " + product.productTitle)
+        intent.putExtra("recyclerProductId",product.productId)
+        startActivity(intent)
     }
 }
