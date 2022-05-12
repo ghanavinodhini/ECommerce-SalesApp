@@ -15,7 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTheme">
-
+        <activity
+            android:name=".view.DisplayProductDetailsActivity"
+            android:exported="false" />
         <activity
             android:name=".view.HomeActivity"
             android:exported="false" />

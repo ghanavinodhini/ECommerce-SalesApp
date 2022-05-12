@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommercesalesapp.R
 import com.example.ecommercesalesapp.adapter.AllProductsRecyclerAdapter
+import com.example.ecommercesalesapp.model.DataManager
 import com.example.ecommercesalesapp.viewModel.AllProductsViewModel
 import com.example.ecommercesalesapp.viewModel.LoginRegisterViewModel
 import com.google.firebase.auth.FirebaseUser
@@ -69,11 +70,20 @@ class HomeActivity : AppCompatActivity() {
             allProductsRecyclerAdapter = AllProductsRecyclerAdapter(this@HomeActivity,allProductsViewModel!!)
             allProductsRecyclerView.setLayoutManager(LinearLayoutManager(this@HomeActivity))
             allProductsRecyclerView.setAdapter(allProductsRecyclerAdapter)
-            allProductsRecyclerAdapter.notifyDataSetChanged()
+            //allProductsRecyclerAdapter.notifyDataSetChanged()
         }
         )
 
+       // loadAllProductsData()
+
     }
+
+   /* private fun loadAllProductsData(){
+        allProductsRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        allProductsRecyclerView.setAdapter(allProductsRecyclerAdapter)
+
+
+    }*/
 
     private fun displayCreateAdvertisement(){
         val createAdIntent = Intent(this,CreateAdvertisementActivity::class.java)
