@@ -1,14 +1,18 @@
 package com.example.ecommercesalesapp.view
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.isVisible
 import com.example.ecommercesalesapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
+import com.synnapps.carouselview.CarouselView
+import com.synnapps.carouselview.ImageListener
 
 class DisplayProductDetailsActivity : AppCompatActivity() {
     lateinit var db: FirebaseFirestore
@@ -16,6 +20,8 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
     lateinit var productTitle : TextView
     lateinit var productPrice : TextView
     lateinit var productDesc : TextView
+    lateinit var imageCarousel : CarouselView
+     var productImagesUri:MutableList<Uri> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +34,53 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
         productTitle = findViewById(R.id.productTitle)
         productPrice = findViewById(R.id.productPrice)
         productDesc = findViewById(R.id.productDesc)
+        imageCarousel = findViewById(R.id.imageCarouselView)
 
         val recyclerProductId = intent.getStringExtra("recyclerProductId")
         Log.d("!!!","In display product activity productId recvd:" + recyclerProductId)
 
+        getProductImages(recyclerProductId)
         getProductDetails(recyclerProductId)
     }
 
+    fun getProductImages(productId: String?){
+        Log.d("!!!", "Inside getProduct Images displayProduct activity")
+
+
+        db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",productId).get()
+            .addOnSuccessListener {
+                val snapshotList = it.documents
+
+                for(snapshot in snapshotList) {
+                    val snapshotUri = snapshot.get("productGalleryImageUrl").toString()
+                    productImagesUri.add(Uri.parse(snapshotUri))
+                }
+                Log.d("!!!", "Product Images Uri in get Product Images: ${productImagesUri}")
+                loadProductImages(productImagesUri)
+            }
+            .addOnFailureListener {
+                Log.d("!!!", "Exception in snapshot: ${it.message}")
+            }
+    }
+
+    fun loadProductImages(productImagesUri: MutableList<Uri>) {
+        Log.d("!!!", "Inside loadProductImages displayProduct Activity")
+
+
+        imageCarousel.setImageListener(imageListener)
+        imageCarousel.pageCount = productImagesUri.size
+        Log.d("!!!", "Inside loadProductImages imagecarousel count: " + imageCarousel.pageCount)
+
+    }
+
+    var imageListener: ImageListener = ImageListener { position, imageView -> // You can use Glide or Picasso here
+        //imageView.setImageResource(sampleImages[position])
+        Log.d("!!!", "Inside imagelistener: " + productImagesUri[position])
+        Picasso.with(applicationContext).load(productImagesUri[position]).into(imageView)
+    }
+
     fun getProductDetails(productId:String?){
+        Log.d("!!!", "Inside get Product Details displayProduct Activity")
         db.collection("products").whereEqualTo("productId",productId).get()
             .addOnSuccessListener {
                 Log.d("!!!", "Iside successlisener")

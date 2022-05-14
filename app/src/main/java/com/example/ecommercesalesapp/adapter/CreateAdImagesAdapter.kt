@@ -58,7 +58,7 @@ class CreateAdImagesAdapter(var context: Context, val listImages:List<CreateAdIm
         fun bind(imageDisplay:CreateAdImages){
             val uri = Uri.parse(imageDisplay.image)
            // gridImage.setImageURI(uri)
-            Picasso.with(context).load(uri).into(gridImage);
+            Picasso.with(context).load(uri).into(gridImage)
         }
     }
 
