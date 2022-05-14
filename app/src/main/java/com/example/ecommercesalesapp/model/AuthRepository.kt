@@ -18,7 +18,7 @@ class AuthRepository {
     private var firebaseUserMutableLiveData : MutableLiveData<FirebaseUser>
     private var userLoggedStatus : MutableLiveData<Boolean>
     private var auth : FirebaseAuth
-    lateinit var db: FirebaseFirestore
+     var db: FirebaseFirestore
     private lateinit var currentUser : FirebaseUser
 
 
@@ -42,6 +42,41 @@ class AuthRepository {
 
     fun getUserLoggedStatus() : MutableLiveData<Boolean>{
         return userLoggedStatus
+    }
+
+    fun getUserName() : String{
+        Log.d("!!!", "Inside getUserName AuthRepository")
+        var userName:String =""
+        val uid = auth.currentUser?.uid
+        val collectionRef = db.collection("users")
+        Log.d("!!!", "Inside getUserName AuthRepository current user id : " + auth.currentUser?.uid)
+        if (uid != null) {
+            Log.d("!!!", "Inside if uid check AuthRepository")
+           collectionRef.document(uid).get().addOnCompleteListener {
+                    Log.d("!!!", "Inside addOnComplete listener AuthRepository")
+                    if(it.isSuccessful){
+                        Log.d("!!!", "Inside task successlistener")
+                        val document = it.result
+
+                        if(document.exists()){
+                            userName = document.getString("Name").toString()
+                        }else {
+                            Log.d("!!!", "The document doesn't exist.")
+                        }
+                    }
+                    Log.d("!!!", "UserName: $userName")
+
+                }
+//                .addOnFailureListener {
+//                    Log.d("!!!", "Exception in snapshot: ${it.message}")
+//                }
+            Log.d("!!!", "Returing user name $userName")
+            return userName
+        }
+       else {
+           return userName
+        }
+
     }
 
     fun register(email:String,password:String,name:String){

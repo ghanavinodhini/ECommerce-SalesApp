@@ -5,9 +5,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.example.ecommercesalesapp.R
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
@@ -20,6 +23,7 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
     lateinit var productTitle : TextView
     lateinit var productPrice : TextView
     lateinit var productDesc : TextView
+    lateinit var bidButton : Button
     lateinit var imageCarousel : CarouselView
      var productImagesUri:MutableList<Uri> = mutableListOf()
 
@@ -34,6 +38,7 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
         productTitle = findViewById(R.id.productTitle)
         productPrice = findViewById(R.id.productPrice)
         productDesc = findViewById(R.id.productDesc)
+        bidButton = findViewById(R.id.bidButton)
         imageCarousel = findViewById(R.id.imageCarouselView)
 
         val recyclerProductId = intent.getStringExtra("recyclerProductId")
@@ -41,6 +46,11 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
 
         getProductImages(recyclerProductId)
         getProductDetails(recyclerProductId)
+
+        bidButton.setOnClickListener {
+            Log.d("!!!","Inside bit button click")
+           displaySendMessageActivity()
+        }
     }
 
     fun getProductImages(productId: String?){
@@ -65,7 +75,6 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
 
     fun loadProductImages(productImagesUri: MutableList<Uri>) {
         Log.d("!!!", "Inside loadProductImages displayProduct Activity")
-
 
         imageCarousel.setImageListener(imageListener)
         imageCarousel.pageCount = productImagesUri.size
@@ -104,7 +113,13 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
         this.productTitle.text = productTitle
         this.productPrice.text = productPrice
         this.productDesc.text = productDesc
+    }
 
+    fun displaySendMessageActivity(){
+        val intent = Intent(this,SendMessageActivity::class.java)
+        intent.putExtra("productTitle",this.productTitle.text)
+        startActivity(intent)
+        finish()
     }
 
     override fun onBackPressed() {

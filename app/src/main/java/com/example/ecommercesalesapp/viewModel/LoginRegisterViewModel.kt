@@ -11,6 +11,7 @@ class LoginRegisterViewModel(application: Application) : AndroidViewModel(applic
     private  var authRepository: AuthRepository
     private  var userData : MutableLiveData<FirebaseUser>
     private  var userLoggedStatus : MutableLiveData<Boolean>
+    private lateinit var userName : String
 
     fun getFirebaseUserMutableLiveData() : MutableLiveData<FirebaseUser>{
         return userData
@@ -20,10 +21,15 @@ class LoginRegisterViewModel(application: Application) : AndroidViewModel(applic
         return userLoggedStatus
     }
 
+    fun getUserName() : String{
+        return userName
+    }
+
     init {
         authRepository = AuthRepository(application)
         userData = authRepository.getFirebaseUserMutableLiveData()
         userLoggedStatus = authRepository.getUserLoggedStatus()
+        userName = authRepository.getUserName()
     }
 
     fun register(email : String, password: String,name: String){

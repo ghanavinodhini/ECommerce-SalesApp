@@ -24,6 +24,7 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
     lateinit var userNameTextView:TextView
     lateinit var signOutButton : Button
     lateinit var postAdButton : Button
+    lateinit var currentUserName : String
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
     lateinit var allProductsViewModel: AllProductsViewModel
     var allProducts = MutableLiveData<ArrayList<AllProducts>>()
@@ -46,8 +47,9 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(this, Observer<FirebaseUser>{
             //Check if FirebaseUser not null
             if(it != null){
-                userNameTextView.setText("WELCOME " + it.email?.toUpperCase())
-
+                currentUserName = loginRegisterViewModel.getUserName()
+                //userNameTextView.setText("WELCOME " + it.email?.toUpperCase())
+                userNameTextView.setText("WELCOME " + currentUserName.toUpperCase())
             }
         })
 
@@ -55,7 +57,6 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
             //Check if FirebaseUser loggedOut is true
             if(it){
                displaySplashScreen()
-
             }
         })
 
