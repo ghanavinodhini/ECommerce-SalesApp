@@ -23,6 +23,8 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
     lateinit var productTitle : TextView
     lateinit var productPrice : TextView
     lateinit var productDesc : TextView
+    lateinit var productId: String
+    lateinit var productOwnerId: String
     lateinit var bidButton : Button
     lateinit var imageCarousel : CarouselView
      var productImagesUri:MutableList<Uri> = mutableListOf()
@@ -41,11 +43,11 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
         bidButton = findViewById(R.id.bidButton)
         imageCarousel = findViewById(R.id.imageCarouselView)
 
-        val recyclerProductId = intent.getStringExtra("recyclerProductId")
-        Log.d("!!!","In display product activity productId recvd:" + recyclerProductId)
+         productId = intent.getStringExtra("recyclerProductId").toString()
+        Log.d("!!!","In display product activity productId recvd:" + productId)
 
-        getProductImages(recyclerProductId)
-        getProductDetails(recyclerProductId)
+        getProductImages(productId)
+        getProductDetails(productId)
 
         bidButton.setOnClickListener {
             Log.d("!!!","Inside bit button click")
@@ -57,7 +59,8 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
         Log.d("!!!", "Inside getProduct Images displayProduct activity")
 
 
-        db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",productId).get()
+        //db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",productId).get()
+        db.collection("images").whereEqualTo("productId",productId).get()
             .addOnSuccessListener {
                 val snapshotList = it.documents
 
@@ -100,6 +103,7 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
                     val productTitle = snapshot.get("productTitle").toString()
                     val productPrice = snapshot.get("productPrice").toString()
                     val productDesc = snapshot.get("productDesc").toString()
+                    productOwnerId = snapshot.get("userId").toString()
                     Log.d("!!!", "Product Title: $productTitle, Product Price: $productPrice, Product Desc: $productDesc")
                     displayProductDetails(productTitle,productPrice,productDesc)
                 }
@@ -118,6 +122,8 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
     fun displaySendMessageActivity(){
         val intent = Intent(this,SendMessageActivity::class.java)
         intent.putExtra("productTitle",this.productTitle.text)
+        intent.putExtra("productId",this.productId)
+        intent.putExtra("sellerId",this.productOwnerId)
         startActivity(intent)
         finish()
     }

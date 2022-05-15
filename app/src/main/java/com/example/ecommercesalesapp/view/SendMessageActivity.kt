@@ -23,6 +23,8 @@ class SendMessageActivity : AppCompatActivity() {
     lateinit var uid : String
     lateinit var buyerEmail : String
     lateinit var buyerInterestedProduct : String
+    lateinit var buyerInterestedProductId : String
+    lateinit var sellerId: String
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
     lateinit var sendMessageViewModel: SendMessageViewModel
 
@@ -36,6 +38,9 @@ class SendMessageActivity : AppCompatActivity() {
 
          buyerInterestedProduct = intent.getStringExtra("productTitle").toString()
         Log.d("!!!","In send message activity product title recvd:" + buyerInterestedProduct)
+
+        buyerInterestedProductId = intent.getStringExtra("productId").toString()
+        sellerId = intent.getStringExtra("sellerId").toString()
 
         loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
 
@@ -59,10 +64,12 @@ class SendMessageActivity : AppCompatActivity() {
     fun saveBuyerMessage(){
         val buyerMessage = BuyerMessage()
         buyerMessage.buyerInterestedProduct = buyerInterestedProduct
+        buyerMessage.buyerInterestedProductId = buyerInterestedProductId
         buyerMessage.buyerBidPrice = this.buyerBidPrice.text.toString()
         buyerMessage.buyerMessage = this.buyerMessage.text.toString()
         buyerMessage.buyerUserId = uid
         buyerMessage.buyerEmail = buyerEmail
+        buyerMessage.sellerId = this.sellerId
 
         buyerMessage.let { sendMessageViewModel.saveBuyerMessage(it) }
     }

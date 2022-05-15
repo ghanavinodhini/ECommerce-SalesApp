@@ -252,7 +252,8 @@ class ImageGalleryActivity : AppCompatActivity() {
         galleryProductsData["uid"] = auth.uid.toString()
         galleryProductsData["productId"] = advertisementId
 
-        db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts")
+        //db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts")
+        db.collection("images")
             .add(galleryProductsData)
             .addOnSuccessListener { documentReference ->
                 Toast.makeText(this, "Saved Image Url to DB", Toast.LENGTH_LONG).show()

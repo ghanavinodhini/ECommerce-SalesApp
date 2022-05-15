@@ -137,7 +137,8 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         postAdImagesRecyclerView.layoutManager = GridLayoutManager(applicationContext,2)
         postAdImagesRecyclerView.adapter = CreateAdImagesAdapter(this,DataManager.allGridImages)
 
-         db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",galleryAdvertisementId).get()
+         //db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",galleryAdvertisementId).get()
+        db.collection("images").whereEqualTo("productId",galleryAdvertisementId).get()
             .addOnSuccessListener {
                 val snapshotList = it.documents
                 DataManager.allGridImages.clear()

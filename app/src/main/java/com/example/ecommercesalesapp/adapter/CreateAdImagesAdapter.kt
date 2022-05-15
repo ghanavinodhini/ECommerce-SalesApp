@@ -28,7 +28,7 @@ class CreateAdImagesAdapter(var context: Context, val listImages:List<CreateAdIm
         viewType: Int
     ): CreateAdImagesAdapter.createAdImagesViewHolder {
         Log.d("!!!","Inside createAdImagesAdapter")
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.postad_productimages_view, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.postad_productimages_view, parent, false)
         return createAdImagesViewHolder(view)
     }
 

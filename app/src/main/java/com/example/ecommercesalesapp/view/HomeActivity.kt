@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -24,6 +25,7 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
     lateinit var userNameTextView:TextView
     lateinit var signOutButton : Button
     lateinit var postAdButton : Button
+    lateinit var messagesButton: ImageButton
     lateinit var currentUserName : String
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
     lateinit var allProductsViewModel: AllProductsViewModel
@@ -38,6 +40,7 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         userNameTextView = findViewById(R.id.userNameTextView)
         signOutButton = findViewById(R.id.logoutButton)
         postAdButton = findViewById(R.id.postAdbutton)
+        messagesButton = findViewById(R.id.messagesButton)
         allProductsRecyclerView = findViewById(R.id.allProductsRecyclerView)
 
 
@@ -47,9 +50,9 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(this, Observer<FirebaseUser>{
             //Check if FirebaseUser not null
             if(it != null){
-                currentUserName = loginRegisterViewModel.getUserName()
-                //userNameTextView.setText("WELCOME " + it.email?.toUpperCase())
-                userNameTextView.setText("WELCOME " + currentUserName.toUpperCase())
+                //currentUserName = loginRegisterViewModel.getUserName()
+                userNameTextView.setText("WELCOME " + it.email?.toUpperCase())
+                //userNameTextView.setText("WELCOME " + currentUserName.toUpperCase())
             }
         })
 
@@ -68,6 +71,10 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
             displayCreateAdvertisement()
         }
 
+        messagesButton.setOnClickListener {
+            displayMessages()
+        }
+
        allProductsViewModel = ViewModelProvider(this).get(AllProductsViewModel::class.java)
 
         //Set Observer for allProductsList
@@ -80,6 +87,15 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         )
     }
 
+    override fun onProductClicked(position: Int, product: AllProductsViewModel) {
+        val intent = Intent(this, DisplayProductDetailsActivity::class.java)
+        Log.d("!!!","Recyclerview product clicked: " + product)
+        Log.d("!!!","Recyclerview productid clicked: " + product.productId)
+        Log.d("!!!","Recyclerview product name clicked: " + product.productTitle)
+        intent.putExtra("recyclerProductId",product.productId)
+        startActivity(intent)
+    }
+
 
     private fun displayCreateAdvertisement(){
         val createAdIntent = Intent(this,CreateAdvertisementActivity::class.java)
@@ -87,6 +103,12 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         createAdIntent.putExtra("gallerySelectedImagesList", dummyIntentList)
         createAdIntent.putExtra("galleryAdID","" )
         startActivity(createAdIntent)
+        finish()
+    }
+
+    private fun displayMessages(){
+        val intent = Intent(this,DisplayMessagesActivity::class.java)
+        startActivity(intent)
         finish()
     }
 
@@ -98,12 +120,5 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
 
     }
 
-    override fun onProductClicked(position: Int, product: AllProductsViewModel) {
-        val intent = Intent(this, DisplayProductDetailsActivity::class.java)
-        Log.d("!!!","Recyclerview product clicked: " + product)
-        Log.d("!!!","Recyclerview productid clicked: " + product.productId)
-        Log.d("!!!","Recyclerview product name clicked: " + product.productTitle)
-        intent.putExtra("recyclerProductId",product.productId)
-        startActivity(intent)
-    }
+
 }
