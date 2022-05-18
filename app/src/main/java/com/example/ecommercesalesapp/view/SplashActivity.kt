@@ -19,7 +19,6 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        Log.d("!!!","Inside Splash Activity")
         startBtn = findViewById(R.id.splashButton)
         splashImage = findViewById(R.id.splashImageView)
         splashText = findViewById(R.id.splashTextView)
@@ -38,8 +37,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun displayLoginRegistrationFragment(){
-        Log.d("!!!","Inside displayLoginRegFragment function")
-
         val bundle = Bundle()
         val profileType = "Login"
         bundle.putString("profiletype", profileType)
@@ -47,7 +44,6 @@ class SplashActivity : AppCompatActivity() {
         regFragment.setArguments(bundle)
 
         val transaction = supportFragmentManager.beginTransaction()
-        Log.d("!!!","After declaring fragment variables")
         transaction.add(R.id.mainSplashContainer,regFragment,"regfragment")
         transaction.commit()
     }

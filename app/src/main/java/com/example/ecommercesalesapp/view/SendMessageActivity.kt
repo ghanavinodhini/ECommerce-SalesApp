@@ -36,9 +36,7 @@ class SendMessageActivity : AppCompatActivity() {
         buyerMessage = findViewById(R.id.buyerMessage)
         sendMessageBtn = findViewById(R.id.buyerSendMessage)
 
-         buyerInterestedProduct = intent.getStringExtra("productTitle").toString()
-        Log.d("!!!","In send message activity product title recvd:" + buyerInterestedProduct)
-
+        buyerInterestedProduct = intent.getStringExtra("productTitle").toString()
         buyerInterestedProductId = intent.getStringExtra("productId").toString()
         sellerId = intent.getStringExtra("sellerId").toString()
 
@@ -87,6 +85,13 @@ class SendMessageActivity : AppCompatActivity() {
     }
 
     fun displayHomeActivity(){
+        val intent = Intent(this,HomeActivity::class.java)
+        this.startActivity(intent)
+        this.finish()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
         val intent = Intent(this,HomeActivity::class.java)
         this.startActivity(intent)
         this.finish()

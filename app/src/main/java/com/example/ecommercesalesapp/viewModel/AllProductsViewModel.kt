@@ -20,7 +20,6 @@ class AllProductsViewModel : ViewModel {
      constructor() : super()
      constructor(allProducts: AllProducts) : super()
     {
-        Log.d("!!!", "Inside AllProductsViewModel constructor ")
         this.productId = allProducts.productAdvertsementId.toString()
         this.productTitle = allProducts.productTitle.toString()
         this.productDescription = allProducts.productDescription.toString()
@@ -37,11 +36,6 @@ class AllProductsViewModel : ViewModel {
     var allProductListMutableLiveData = MutableLiveData<ArrayList<AllProductsViewModel>>()
     var allProductsList = ArrayList<AllProductsViewModel>()
 
-
-   /* fun getAllProductsImageUrl() : String{
-        return productImageUri
-    }*/
-
    fun getAllProductsListMutableLiveData() : MutableLiveData<ArrayList<AllProductsViewModel>>
     {
         db.collection("products").get()
@@ -57,14 +51,8 @@ class AllProductsViewModel : ViewModel {
 
                     val allProductsViewModel = AllProductsViewModel(allProducts)
                     allProductsList.add(allProductsViewModel)
-                    Log.d("!!!", "All Products List inside getAllProducts in adapter: $allProductsList")
-
                 }
             }
-      /*  val allProduct1 = AllProducts()
-        val allProductViewModel1: AllProductsViewModel = AllProductsViewModel(allProduct1)
-        allProductsList.add(allProductViewModel1)*/
-
         allProductListMutableLiveData.value = allProductsList
         return allProductListMutableLiveData
     }

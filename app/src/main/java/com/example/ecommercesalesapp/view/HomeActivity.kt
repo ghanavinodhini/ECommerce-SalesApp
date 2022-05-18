@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -23,7 +25,6 @@ import com.google.firebase.auth.FirebaseUser
 
 class HomeActivity : AppCompatActivity(),onProductClickListener {
     lateinit var userNameTextView:TextView
-    lateinit var signOutButton : Button
     lateinit var postAdButton : Button
     lateinit var messagesButton: ImageButton
     lateinit var currentUserName : String
@@ -38,7 +39,6 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         setContentView(R.layout.activity_home)
 
         userNameTextView = findViewById(R.id.userNameTextView)
-        signOutButton = findViewById(R.id.logoutButton)
         postAdButton = findViewById(R.id.postAdbutton)
         messagesButton = findViewById(R.id.messagesButton)
         allProductsRecyclerView = findViewById(R.id.allProductsRecyclerView)
@@ -63,10 +63,6 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
             }
         })
 
-        signOutButton.setOnClickListener {
-            loginRegisterViewModel.logout()
-        }
-
         postAdButton.setOnClickListener {
             displayCreateAdvertisement()
         }
@@ -87,11 +83,25 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         )
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //Inflate toolbar menu
+        menuInflater.inflate(R.menu.toolbar_menu,menu)
+        return true
+    }
+
+    // Implement camera icon click
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                loginRegisterViewModel.logout()
+                true
+            }
+            else -> super.onOptionsItemSelected(item) //returns default false value
+        }
+    }
+
     override fun onProductClicked(position: Int, product: AllProductsViewModel) {
         val intent = Intent(this, DisplayProductDetailsActivity::class.java)
-        Log.d("!!!","Recyclerview product clicked: " + product)
-        Log.d("!!!","Recyclerview productid clicked: " + product.productId)
-        Log.d("!!!","Recyclerview product name clicked: " + product.productTitle)
         intent.putExtra("recyclerProductId",product.productId)
         startActivity(intent)
     }

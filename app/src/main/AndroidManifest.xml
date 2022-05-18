@@ -19,25 +19,31 @@
 
         <activity
             android:name=".view.DisplayMessagesActivity"
-            android:exported="false" />
+            android:exported="true"
+            />
         <activity
             android:name=".view.SendMessageActivity"
-            android:exported="false" />
+            android:exported="true"
+            />
         <activity
             android:name=".view.DisplayProductDetailsActivity"
-            android:exported="false" />
+            android:exported="true"
+            />
         <activity
             android:name=".view.HomeActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.CreateAdvertisementActivity"
-            android:exported="false" />
+            android:exported="true"
+            />
         <activity
             android:name=".view.ImageCaptureDisplayActivity"
-            android:exported="false" />
+            android:exported="true"
+            />
         <activity
             android:name=".view.ImageGalleryActivity"
-            android:exported="false" />
+            android:exported="true"
+            />
         <activity
             android:name=".view.SplashActivity"
             android:exported="true"

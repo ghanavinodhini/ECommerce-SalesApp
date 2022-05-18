@@ -15,26 +15,21 @@ class CreateAdvertisementViewModel: ViewModel() {
     }
 
 
-    fun createNewProduct(product : AllProducts){
-
-    Log.d("!!!", "New Product details in createadvertisement viewmodel : $product")
+    fun createNewProduct(product : AllProducts)
+    {
     val newProductDetails = hashMapOf("productId" to product.productAdvertsementId,"productTitle" to product.productTitle,"productPrice" to product.productPrice,
         "productDesc" to product.productDescription,"productImageUri" to product.productImageUri,"userId" to product.uid)
 
         product.uid?.let {
-            //db.collection("products").document(it)
             db.collection("products")
             .add(newProductDetails)
             .addOnSuccessListener {
                     documentReference ->
-                Log.d("!!!","New Product DocumentSnapshot added")
                 addStatus.value = true
             }
             .addOnFailureListener {
                 addStatus.value = false
             }
         }
-
 }
-
 }

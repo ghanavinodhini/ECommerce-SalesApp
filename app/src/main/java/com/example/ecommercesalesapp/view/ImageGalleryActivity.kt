@@ -62,10 +62,7 @@ class ImageGalleryActivity : AppCompatActivity() {
         getIntentValue()
         buttonsVisibilitySwitch()
 
-        //Initialise Firebase Auth
         auth = FirebaseAuth.getInstance()
-
-        //Initialise firebase storage reference
         storageRef = FirebaseStorage.getInstance().getReference()
 
         //Initiate list
@@ -81,11 +78,7 @@ class ImageGalleryActivity : AppCompatActivity() {
         }
 
         okGalleryButton.setOnClickListener {
-            //saveGalleryReceiptsToFirebase()
-           // val galleryImageFilePath = f.name + System.currentTimeMillis()
-            saveGalleryImagesToFirebase(f.name,Uri.fromFile(f))
-           // saveGalleryImagesToFirebase(galleryImageFilePath,Uri.fromFile(f))
-
+            saveGalleryImagesToFirebase(f.name)
         }
 
         nextButton.setOnClickListener {
@@ -113,13 +106,10 @@ class ImageGalleryActivity : AppCompatActivity() {
         openCameraButton.setOnClickListener {
             displayImageCaptureDisplayActivity()
         }
-
     }
 
     fun getIntentValue(){
-        Log.d("!!!", "Inside getintent image gallery activity")
         advertisementId = intent.getStringExtra("productAdID").toString()
-        Log.d("!!!", "Inside getintent image gallery activity: $advertisementId")
     }
 
     private fun buttonsVisibilitySwitch(){
@@ -129,7 +119,6 @@ class ImageGalleryActivity : AppCompatActivity() {
     }
 
     private fun pickImagesIntent(){
-        Log.d("!!!","Inside pickImages function")
         val intent = Intent()
         intent.type = "image/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true)
@@ -139,11 +128,9 @@ class ImageGalleryActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("!!!","Inside activity result function")
+
         if(requestCode == PICK_IMAGES_CODE){
-
             if(resultCode == Activity.RESULT_OK){
-
                 if(data!!.clipData != null){
                     //Picked multiple images
                         //Enable Previous and Next buttons
@@ -163,10 +150,8 @@ class ImageGalleryActivity : AppCompatActivity() {
                     galleryImageSwitcher.setImageURI(gallerySelectedImages!![0])
                     position = 0
 
-
                     // Create the File where the photo should go
                     val photoFile: File? = try {
-                        Log.d("!!!", "Before calling createImageFile function")
                         createImageFile()
                     } catch (ex: IOException) {
                         // Error occurred while creating the File
@@ -174,24 +159,13 @@ class ImageGalleryActivity : AppCompatActivity() {
                         null
                     }
                     // Continue only if the File was successfully created
-                  /*  photoFile?.also {
-                        val photoURI: Uri = FileProvider.getUriForFile(
-                            this,
-                            "com.example.android.fileprovider",
-                            it)
-                        Log.d("!!!", "photoURI value: ${photoURI}")
-                    }*/
                     photoFile?.also {
                         val photoURI: Uri = FileProvider.getUriForFile(
                             this,
                             "com.example.ecommercesalesapp",
                             it)
-                        Log.d("!!!", "photoURI value: ${photoURI}")
                     }
-                    //val f = File(currentPhotoPath)
                     f = File(currentPhotoPath)
-                    //saveGalleryImagesToFirebase(f.name,Uri.fromFile(f))--comented to save the gallery images list to Array variable
-
 
                 }else{
                     //Picked Single image
@@ -211,11 +185,10 @@ class ImageGalleryActivity : AppCompatActivity() {
 
     @Throws(IOException::class)
     private fun createImageFile(): File {
-        Log.d("!!!", "Inside createImageFile function")
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        //val storageDir:File? = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+
         return File.createTempFile(
             "Product_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
@@ -226,23 +199,14 @@ class ImageGalleryActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveGalleryImagesToFirebase(imageFileName: String, fromFileUri: Uri) {
-        Log.d("!!!","Inside Save gallery products to firebase function")
-        Log.d("!!!","Inside Save gallery products : Size of array gallery:"+gallerySelectedImages!!.size)
-        //Save in images collection "galleryimages/"
-        //val uniqueId = UUID.randomUUID().toString()
-        //val imageStorage = storageRef.child("{galleryimages/${imageFileName}-${uniqueId}}")
+    private fun saveGalleryImagesToFirebase(imageFileName: String) {
         for ( i in 0 until gallerySelectedImages!!.size){
             val uniqueId = UUID.randomUUID().toString()
             val imageStorage = storageRef.child("{galleryimages/${imageFileName}-${uniqueId}}")
 
             gallerySelectedImages!![i]?.let {
-                Log.d("!!!", "Product Image URI from galleryimages Array: ${it.toString()}")
                 imageStorage.putFile(it).addOnSuccessListener {
                     imageStorage.downloadUrl.addOnSuccessListener {
-                        Log.d("!!!", "Product Image URI from firebase server: ${it.toString()}")
-                        Toast.makeText(this, "Product Gallery Image saved to Firebase Storage", Toast.LENGTH_SHORT).show()
-
                         addImageUriToDatabase(it)
                     }
                 }
@@ -258,7 +222,6 @@ class ImageGalleryActivity : AppCompatActivity() {
         galleryProductsData["uid"] = auth.uid.toString()
         galleryProductsData["productId"] = advertisementId
 
-        //db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts")
         db.collection("images")
             .add(galleryProductsData)
             .addOnSuccessListener { documentReference ->
@@ -271,10 +234,7 @@ class ImageGalleryActivity : AppCompatActivity() {
     }
 
     private fun displayCreateAdvertisementActivity(){
-        val createAdIntent = Intent(this@ImageGalleryActivity,CreateAdvertisementActivity::class.java)
-       // Log.d("!!!", "Inside displayCreateAdActivity uriList value to pass : $uriList")
-
-        //createAdIntent.putExtra("gallerySelectedImagesList",uriList)
+        val createAdIntent = Intent(this,CreateAdvertisementActivity::class.java)
         createAdIntent.putExtra("galleryAdID",advertisementId )
         startActivity(createAdIntent)
         finish()
@@ -285,10 +245,12 @@ class ImageGalleryActivity : AppCompatActivity() {
         intent.putExtra("galleryAdID",advertisementId )
         startActivity(intent)
         finish()
+    }
 
-      /*  val cameraIntent = Intent(this,CameraActivity::class.java)
-        cameraIntent.putExtra("galleryAdID",advertisementId )
-        startActivity(intent)
-        finish()*/
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this,HomeActivity::class.java)
+        this.startActivity(intent)
+        this.finish()
     }
 }

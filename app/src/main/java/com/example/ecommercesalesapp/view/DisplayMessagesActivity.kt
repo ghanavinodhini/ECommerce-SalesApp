@@ -1,5 +1,6 @@
 package com.example.ecommercesalesapp.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -21,16 +22,13 @@ class DisplayMessagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_display_messages)
 
         db = FirebaseFirestore.getInstance()
-        //Initialise Firebase Auth
         auth = FirebaseAuth.getInstance()
 
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView)
-
         loadMessages()
     }
 
     fun loadMessages(){
-
         messagesRecyclerView.layoutManager = LinearLayoutManager(this)
         messagesRecyclerView.adapter = AllMessagesRecyclerAdapter(this, DataManager.allMessages)
 
@@ -40,8 +38,6 @@ class DisplayMessagesActivity : AppCompatActivity() {
                 DataManager.allMessages.clear()
 
                     for(snapshot in snapshotList){
-                        Log.d("!!!","Document details: "+ "DocID: " + snapshot.id + ", Details: " + snapshot.data)
-
                         val message = BuyerMessage(
                             snapshot.getString("buyerInterestedProduct").toString(),
                             snapshot.getString("buyerInterestedProductId").toString(),
@@ -54,8 +50,13 @@ class DisplayMessagesActivity : AppCompatActivity() {
                         DataManager.allMessages.add(message)
                     }
                 messagesRecyclerView.adapter?.notifyDataSetChanged()
-
             }
+    }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this,HomeActivity::class.java)
+        this.startActivity(intent)
+        this.finish()
     }
 }

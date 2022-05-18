@@ -34,7 +34,6 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_display_product_details)
 
         db = FirebaseFirestore.getInstance()
-        //Initialise Firebase Auth
         auth = FirebaseAuth.getInstance()
 
         productTitle = findViewById(R.id.productTitle)
@@ -43,32 +42,24 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
         bidButton = findViewById(R.id.bidButton)
         imageCarousel = findViewById(R.id.imageCarouselView)
 
-         productId = intent.getStringExtra("recyclerProductId").toString()
-        Log.d("!!!","In display product activity productId recvd:" + productId)
+        productId = intent.getStringExtra("recyclerProductId").toString()
 
         getProductImages(productId)
         getProductDetails(productId)
 
         bidButton.setOnClickListener {
-            Log.d("!!!","Inside bit button click")
            displaySendMessageActivity()
         }
     }
 
     fun getProductImages(productId: String?){
-        Log.d("!!!", "Inside getProduct Images displayProduct activity")
-
-
-        //db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",productId).get()
         db.collection("images").whereEqualTo("productId",productId).get()
             .addOnSuccessListener {
                 val snapshotList = it.documents
-
                 for(snapshot in snapshotList) {
                     val snapshotUri = snapshot.get("productGalleryImageUrl").toString()
                     productImagesUri.add(Uri.parse(snapshotUri))
                 }
-                Log.d("!!!", "Product Images Uri in get Product Images: ${productImagesUri}")
                 loadProductImages(productImagesUri)
             }
             .addOnFailureListener {
@@ -77,34 +68,24 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
     }
 
     fun loadProductImages(productImagesUri: MutableList<Uri>) {
-        Log.d("!!!", "Inside loadProductImages displayProduct Activity")
-
         imageCarousel.setImageListener(imageListener)
         imageCarousel.pageCount = productImagesUri.size
-        Log.d("!!!", "Inside loadProductImages imagecarousel count: " + imageCarousel.pageCount)
-
     }
 
-    var imageListener: ImageListener = ImageListener { position, imageView -> // You can use Glide or Picasso here
-        //imageView.setImageResource(sampleImages[position])
-        Log.d("!!!", "Inside imagelistener: " + productImagesUri[position])
+    var imageListener: ImageListener = ImageListener { position, imageView ->
         Picasso.with(applicationContext).load(productImagesUri[position]).into(imageView)
     }
 
     fun getProductDetails(productId:String?){
-        Log.d("!!!", "Inside get Product Details displayProduct Activity")
         db.collection("products").whereEqualTo("productId",productId).get()
             .addOnSuccessListener {
-                Log.d("!!!", "Iside successlisener")
                 val snapshotList = it.documents
-                Log.d("!!!", "Snapshot List: $snapshotList")
                 for(snapshot in snapshotList) {
-                    Log.d("!!!", "Products data: " + snapshot.getData())
                     val productTitle = snapshot.get("productTitle").toString()
                     val productPrice = snapshot.get("productPrice").toString()
                     val productDesc = snapshot.get("productDesc").toString()
                     productOwnerId = snapshot.get("userId").toString()
-                    Log.d("!!!", "Product Title: $productTitle, Product Price: $productPrice, Product Desc: $productDesc")
+
                     displayProductDetails(productTitle,productPrice,productDesc)
                 }
             }

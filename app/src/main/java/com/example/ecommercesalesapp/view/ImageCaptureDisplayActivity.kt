@@ -48,21 +48,14 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_capture_display)
-        Log.d("!!!", "Inside imagecapture activity ")
-        //Initialise Firebase Auth
-        auth = FirebaseAuth.getInstance()
 
-        //Initialise firebase storage reference
+        auth = FirebaseAuth.getInstance()
         storageRef = FirebaseStorage.getInstance().getReference()
 
         capturedProductImageView = findViewById(R.id.capturedProductImageView)
         val okButton = findViewById<Button>(R.id.okButton)
 
-        //Add toolbar to actionbar
-      /*  val myCaptureImageToolbar: Toolbar = findViewById(R.id.imageCaptureDisplayToolbar)
-        setSupportActionBar(myCaptureImageToolbar)*/
         getIntentValue()
-
         dispatchTakePictureIntent()
 
         okButton.setOnClickListener {
@@ -71,27 +64,15 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
     }
 
     fun getIntentValue(){
-        Log.d("!!!", "Inside getintent camera activity")
         advertisementId = intent.getStringExtra("galleryAdID").toString()
-        Log.d("!!!", "Inside getintent camera activity: $advertisementId")
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        //Inflate toolbar menu
-        menuInflater.inflate(R.menu.toolbar_menu,menu)
-        return true
-    }
-
-    //Create absolut URI of catured image and display to store image in DB
     private fun dispatchTakePictureIntent() {
-        Log.d("!!!", "Inside dispatchTakePictureIntent")
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             // Ensure that there's a camera activity to handle the intent
             takePictureIntent.resolveActivity(packageManager)?.also {
                 // Create the File where the photo should go
                 val photoFile: File? = try {
-                    Log.d("!!!", "Before calling createImageFile function")
                     createImageFile()
                 } catch (ex: IOException) {
                     // Error occurred while creating the File
@@ -100,24 +81,12 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
                 }
                 // Continue only if the File was successfully created
                 photoFile?.also {
-                   /* val photoURI: Uri = FileProvider.getUriForFile(
-                        this,
-                        "com.example.android.fileprovider",
-                        it
-                    )*/
-
-                   /* photoURI = FileProvider.getUriForFile(
-                        this,
-                        "com.example.android.fileprovider",
-                        it)*/
                     photoURI = FileProvider.getUriForFile(
                         this,
                         "com.example.ecommercesalesapp",
                         it)
-                    Log.d("!!!", "photoURI value: ${photoURI}")
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE)
-
                 }
             }
         }
@@ -125,7 +94,6 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
 
     @Throws(IOException::class)
     private fun createImageFile(): File {
-        Log.d("!!!", "Inside createImageFile function")
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -143,46 +111,17 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Log.d("!!!", "Inside onActivityResult function")
         if (requestCode == 99 && resultCode == Activity.RESULT_OK) {
-            Log.d("!!!", "Inside requestCode if statement")
-            // val uri = data?.getExtras().getParcelable(ScanConstants.SCANNED_RESULT)
             val f = File(currentPhotoPath)
-            //Get URI of image that user selected
-            val uri = data?.data
-            Log.d("!!!","Uri value from getdata: $uri")
-            //Picasso.with(applicationContext).load(uri).into(capturedProductImageView)
             capturedProductImageView.setImageURI(Uri.fromFile(f))
-            /*if (data != null) {
-                bmp = data.extras?.get("data") as Bitmap
-                Log.d("!!!", "Bitmap value: ${bmp}")
-            }*/
 
             try {
-                Log.d("!!!", "Inside try block")
-
-                //Convert URI to a stream
-                val inputStream: InputStream? = photoURI.let { contentResolver.openInputStream(it) }
-                Log.d("!!!","inputstream value: $inputStream")
-                //Open image as bitmap
-                val image = BitmapFactory.decodeStream(inputStream)
-
-                Log.d("!!!", "image value after decodestream: $image")
-
-                //Display bitmap image in imageview
-               // capturedProductImageView.setImageBitmap(image)
-
-                //scannedImageView.setImageURI(Uri.fromFile(f)) //Display imageview from URI
-
-                Log.d("!!!", "Absolute URI of image file: ${Uri.fromFile(f)}")
                 val imageUri = galleryAddPic()//Add image to Gallery
 
                 Toast.makeText(this, "Image saved to Gallery", Toast.LENGTH_SHORT).show()
 
                 //Save Image  to Firebase Storage
                 saveImageToFirebase(f.name, imageUri)
-
-
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -205,7 +144,6 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
             storageRef.child("{images/${imageName}-${uniqueId}}") //Save in images collection "images/ imageNAME.JPG"
         imageStorage.putFile(imageUri).addOnSuccessListener {
             imageStorage.downloadUrl.addOnSuccessListener {
-                Log.d("!!!", "Image URI from fiebase server: ${it.toString()}")
                 Toast.makeText(this, "Image saved to Firebase Storage", Toast.LENGTH_SHORT).show()
             }
         }
@@ -214,7 +152,6 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
 
     fun displayGalleryActivity(){
         val intent = Intent(this, ImageGalleryActivity::class.java)
-        Log.d("!!!", "Advertisement ID: $advertisementId")
         intent.putExtra("productAdID",advertisementId )
         startActivity(intent)
         finish()
@@ -225,11 +162,11 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onBackPressed()
-    {
-        val intent = Intent(this, CreateAdvertisementActivity::class.java)
-        startActivity(intent)
-        finish()
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this,HomeActivity::class.java)
+        this.startActivity(intent)
+        this.finish()
     }
 }
 

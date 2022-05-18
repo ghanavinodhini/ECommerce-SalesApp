@@ -35,11 +35,13 @@ class AllMessagesRecyclerAdapter(var context: Context, val messagesList:List<Buy
         var buyerProductTitle = itemView.findViewById<TextView>(R.id.allMessages_productTitle)
         val buyerProductPrice = itemView.findViewById<TextView>(R.id.allMessages_productPrice)
         val buyerProductMessage = itemView.findViewById<TextView>(R.id.allMessages_buyerMessage)
+        val buyerEmail = itemView.findViewById<TextView>(R.id.allMessages_buyerEmail)
 
         fun bind(messagesDisplay:BuyerMessage){
             buyerProductTitle.setText(messagesDisplay.buyerInterestedProduct)
-            buyerProductPrice.setText(messagesDisplay.buyerBidPrice)
+            buyerProductPrice.setText("Offer Price : " + messagesDisplay.buyerBidPrice)
             buyerProductMessage.setText(messagesDisplay.buyerMessage)
+            buyerEmail.setText("Contact : " + messagesDisplay.buyerEmail)
         }
     }
 }
