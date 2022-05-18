@@ -44,7 +44,7 @@ class CreateAdvertisementActivity : AppCompatActivity() {
     lateinit var createAdvertisementViewModel: CreateAdvertisementViewModel
     lateinit var db: FirebaseFirestore
     lateinit var auth: FirebaseAuth
-     var imageGalleryActivity = ImageGalleryActivity()
+    var imageGalleryActivity = ImageGalleryActivity()
     private lateinit var  createAdImagesAdapter: CreateAdImagesAdapter
     private var createAdImagesList = mutableListOf<CreateAdImages>()
 
@@ -67,11 +67,11 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         //loadGridImageData()
 
 
-      /*  createAdImagesAdapter = CreateAdImagesAdapter(applicationContext)
-        postAdImagesRecyclerView.adapter = createAdImagesAdapter*/
+        /*  createAdImagesAdapter = CreateAdImagesAdapter(applicationContext)
+          postAdImagesRecyclerView.adapter = createAdImagesAdapter*/
 
 
-       // createAdImagesAdapter.setImagesDataList(list)
+        // createAdImagesAdapter.setImagesDataList(list)
 
         createAdvertisementViewModel = ViewModelProvider(this).get(CreateAdvertisementViewModel::class.java)
         loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
@@ -80,7 +80,7 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(this, androidx.lifecycle.Observer {
             //Check if FirebaseUser not null
             if(it != null){
-               uid = it.uid
+                uid = it.uid
             }
         })
 
@@ -91,6 +91,10 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         newAdNextButton.setOnClickListener {
             saveNewProduct()
             saveStatus()
+        }
+
+        okButton.setOnClickListener {
+            displayHomeActivity()
         }
 
     }
@@ -119,8 +123,8 @@ class CreateAdvertisementActivity : AppCompatActivity() {
 
     fun getIntentValue(){
         Log.d("!!!", "Inside getintent create ad activity")
-       /* val galleryUriList = intent.getSerializableExtra("gallerySelectedImagesList")
-        Log.d("!!!", "get intent value uri string list : $galleryUriList")*/
+        /* val galleryUriList = intent.getSerializableExtra("gallerySelectedImagesList")
+         Log.d("!!!", "get intent value uri string list : $galleryUriList")*/
         galleryAdvertisementId = intent.getStringExtra("galleryAdID").toString()
         if(galleryAdvertisementId != ""){
             loadGridImageData()
@@ -137,7 +141,7 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         postAdImagesRecyclerView.layoutManager = GridLayoutManager(applicationContext,2)
         postAdImagesRecyclerView.adapter = CreateAdImagesAdapter(this,DataManager.allGridImages)
 
-         //db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",galleryAdvertisementId).get()
+        //db.collection("images").document("${auth.uid.toString()}").collection("galleryProducts").whereEqualTo("productId",galleryAdvertisementId).get()
         db.collection("images").whereEqualTo("productId",galleryAdvertisementId).get()
             .addOnSuccessListener {
                 val snapshotList = it.documents
