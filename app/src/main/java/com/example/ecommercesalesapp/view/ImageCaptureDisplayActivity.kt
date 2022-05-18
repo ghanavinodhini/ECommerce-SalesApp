@@ -1,24 +1,32 @@
 package com.example.ecommercesalesapp.view
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.example.ecommercesalesapp.R
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Picasso
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -34,8 +42,9 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
     lateinit var capturedProductImageView: ImageView
     lateinit var contentUri:Uri
     lateinit var photoURI:Uri
-    lateinit var selGalleryButton: MaterialButton
+    lateinit var advertisementId: String
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_capture_display)
@@ -47,23 +56,26 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
         storageRef = FirebaseStorage.getInstance().getReference()
 
         capturedProductImageView = findViewById(R.id.capturedProductImageView)
-        selGalleryButton = findViewById(R.id.pickGalleryImageButton)
-
-        selGalleryButton.setOnClickListener {
-            val intent = Intent(this, ImageGalleryActivity::class.java)
-            startActivity(intent)
-            //Finish ImageCaptureDisplay Activity
-            finish()
-        }
+        val okButton = findViewById<Button>(R.id.okButton)
 
         //Add toolbar to actionbar
       /*  val myCaptureImageToolbar: Toolbar = findViewById(R.id.imageCaptureDisplayToolbar)
         setSupportActionBar(myCaptureImageToolbar)*/
-
-
+        getIntentValue()
 
         dispatchTakePictureIntent()
+
+        okButton.setOnClickListener {
+            displayGalleryActivity()
+        }
     }
+
+    fun getIntentValue(){
+        Log.d("!!!", "Inside getintent camera activity")
+        advertisementId = intent.getStringExtra("galleryAdID").toString()
+        Log.d("!!!", "Inside getintent camera activity: $advertisementId")
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         //Inflate toolbar menu
@@ -139,6 +151,8 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
             //Get URI of image that user selected
             val uri = data?.data
             Log.d("!!!","Uri value from getdata: $uri")
+            //Picasso.with(applicationContext).load(uri).into(capturedProductImageView)
+            capturedProductImageView.setImageURI(Uri.fromFile(f))
             /*if (data != null) {
                 bmp = data.extras?.get("data") as Bitmap
                 Log.d("!!!", "Bitmap value: ${bmp}")
@@ -156,15 +170,17 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
                 Log.d("!!!", "image value after decodestream: $image")
 
                 //Display bitmap image in imageview
-                capturedProductImageView.setImageBitmap(image)
+               // capturedProductImageView.setImageBitmap(image)
 
                 //scannedImageView.setImageURI(Uri.fromFile(f)) //Display imageview from URI
 
                 Log.d("!!!", "Absolute URI of image file: ${Uri.fromFile(f)}")
                 val imageUri = galleryAddPic()//Add image to Gallery
 
-                //Save Image Receipt to Firebase Storage
-                saveReceiptToFirebase(f.name, imageUri)
+                Toast.makeText(this, "Image saved to Gallery", Toast.LENGTH_SHORT).show()
+
+                //Save Image  to Firebase Storage
+                saveImageToFirebase(f.name, imageUri)
 
 
             } catch (e: IOException) {
@@ -183,52 +199,38 @@ class ImageCaptureDisplayActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveReceiptToFirebase(imageName: String, imageUri: Uri) {
+    private fun saveImageToFirebase(imageName: String, imageUri: Uri) {
+        val uniqueId = UUID.randomUUID().toString()
         val imageStorage =
-            storageRef.child("{images/$imageName}") //Save in images collection "images/ imageNAME.JPG"
+            storageRef.child("{images/${imageName}-${uniqueId}}") //Save in images collection "images/ imageNAME.JPG"
         imageStorage.putFile(imageUri).addOnSuccessListener {
             imageStorage.downloadUrl.addOnSuccessListener {
                 Log.d("!!!", "Image URI from fiebase server: ${it.toString()}")
                 Toast.makeText(this, "Image saved to Firebase Storage", Toast.LENGTH_SHORT).show()
-
-                addImageUriToDatabase(it)
             }
         }
 
     }
 
-    private fun addImageUriToDatabase(uri: Uri){
-        val db = FirebaseFirestore.getInstance()
-
-        val data = HashMap<String, Any>()
-        data["receiptImageUrl"] = uri.toString()
-        data["receiptImageDate"] = "01/01/2022"
-        data["receiptTotal"] = "100"
-        data["receiptImageId"] = "Receipt_$uri"
-        data["uid"] = auth.uid.toString()
-
-        db.collection("receipts")
-            .add(data)
-            .addOnSuccessListener { documentReference ->
-                Toast.makeText(this, "Saved Image Url to DB", Toast.LENGTH_LONG).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error saving Image Url to DB", Toast.LENGTH_LONG).show()
-            }
+    fun displayGalleryActivity(){
+        val intent = Intent(this, ImageGalleryActivity::class.java)
+        Log.d("!!!", "Advertisement ID: $advertisementId")
+        intent.putExtra("productAdID",advertisementId )
+        startActivity(intent)
+        finish()
     }
-    //Back Arrow button handling to AddExpenses Activity
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
-       // return super.onSupportNavigateUp()
     }
 
-    //Back navigation button handling to AddExpenses Activity
     override fun onBackPressed()
     {
         val intent = Intent(this, CreateAdvertisementActivity::class.java)
         startActivity(intent)
-        //Finish ImageCapture Activity
         finish()
     }
 }
+
+

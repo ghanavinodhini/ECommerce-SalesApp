@@ -44,6 +44,7 @@ class ImageGalleryActivity : AppCompatActivity() {
     lateinit var okGalleryButton : Button
     lateinit var previousButton : Button
     lateinit var nextButton: Button
+    lateinit var openCameraButton: Button
     lateinit var advertisementId: String
     lateinit var f: File
 
@@ -56,6 +57,7 @@ class ImageGalleryActivity : AppCompatActivity() {
         okGalleryButton = findViewById(R.id.okGalleryButton)
         previousButton = findViewById(R.id.previousButton)
         nextButton = findViewById(R.id.nextButton)
+        openCameraButton = findViewById(R.id.openCameraButton)
 
         getIntentValue()
         buttonsVisibilitySwitch()
@@ -106,6 +108,10 @@ class ImageGalleryActivity : AppCompatActivity() {
                 Toast.makeText(this,"No more images",Toast.LENGTH_SHORT).show()
                 previousButton.isVisible = false
             }
+        }
+
+        openCameraButton.setOnClickListener {
+            displayImageCaptureDisplayActivity()
         }
 
     }
@@ -272,5 +278,17 @@ class ImageGalleryActivity : AppCompatActivity() {
         createAdIntent.putExtra("galleryAdID",advertisementId )
         startActivity(createAdIntent)
         finish()
+    }
+
+    fun displayImageCaptureDisplayActivity(){
+        val intent = Intent(this,ImageCaptureDisplayActivity::class.java)
+        intent.putExtra("galleryAdID",advertisementId )
+        startActivity(intent)
+        finish()
+
+      /*  val cameraIntent = Intent(this,CameraActivity::class.java)
+        cameraIntent.putExtra("galleryAdID",advertisementId )
+        startActivity(intent)
+        finish()*/
     }
 }
