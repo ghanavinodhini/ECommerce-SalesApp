@@ -103,6 +103,7 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
     override fun onProductClicked(position: Int, product: AllProductsViewModel) {
         val intent = Intent(this, DisplayProductDetailsActivity::class.java)
         intent.putExtra("recyclerProductId",product.productId)
+        intent.putExtra("productOwnerId", product.uid)
         startActivity(intent)
     }
 
