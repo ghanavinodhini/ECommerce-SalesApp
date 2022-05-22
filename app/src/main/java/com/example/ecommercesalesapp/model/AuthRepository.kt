@@ -21,6 +21,7 @@ class AuthRepository {
      var db: FirebaseFirestore
     private lateinit var currentUser : FirebaseUser
 
+// comment verification
 
     constructor(application:Application){
         app = application
