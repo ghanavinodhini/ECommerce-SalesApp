@@ -198,4 +198,9 @@ class CreateAdvertisementActivity : AppCompatActivity() {
         this.startActivity(intent)
         this.finish()
     }
+
+    override fun onResume() {
+        super.onResume()
+        postAdImagesRecyclerView.adapter?.notifyDataSetChanged()
+    }
 }

@@ -9,7 +9,7 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.lifecycle.MutableLiveData
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,9 +19,11 @@ import com.example.ecommercesalesapp.adapter.AllProductsRecyclerAdapter
 import com.example.ecommercesalesapp.adapter.onProductClickListener
 import com.example.ecommercesalesapp.model.AllProducts
 import com.example.ecommercesalesapp.model.DataManager
-import com.example.ecommercesalesapp.viewModel.AllProductsViewModel
 import com.example.ecommercesalesapp.viewModel.LoginRegisterViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
 
 class HomeActivity : AppCompatActivity(),onProductClickListener {
     lateinit var userNameTextView:TextView
@@ -29,12 +31,12 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
     lateinit var messagesButton: ImageButton
     lateinit var currentUserName : String
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
-    lateinit var allProductsViewModel: AllProductsViewModel
-    var allProducts = MutableLiveData<ArrayList<AllProducts>>()
+    lateinit var db: FirebaseFirestore
+    lateinit var auth: FirebaseAuth
     lateinit var allProductsRecyclerView: RecyclerView
-    lateinit var allProductsRecyclerAdapter: AllProductsRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("!!!","Inside home activity")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
@@ -44,14 +46,18 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         allProductsRecyclerView = findViewById(R.id.allProductsRecyclerView)
 
 
+        db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+
         loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
 
         //Set Observer for Firebase User
         loginRegisterViewModel.getFirebaseUserMutableLiveData().observe(this, Observer<FirebaseUser>{
             //Check if FirebaseUser not null
             if(it != null){
+                Log.d("!!!","Inside home activity loginRegisterviewmodel getfirebaselivedata")
                 //currentUserName = loginRegisterViewModel.getUserName()
-                userNameTextView.setText("WELCOME " + it.email?.toUpperCase())
+                userNameTextView.setText("WELCOME " + it.email?.uppercase(Locale.getDefault()))
                 //userNameTextView.setText("WELCOME " + currentUserName.toUpperCase())
             }
         })
@@ -70,26 +76,47 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         messagesButton.setOnClickListener {
             displayMessages()
         }
-
-       allProductsViewModel = ViewModelProvider(this).get(AllProductsViewModel::class.java)
-
-        //Set Observer for allProductsList
-        allProductsViewModel.getAllProductsListMutableLiveData().observe(this, Observer {allProductsViewModel->
-
-            allProductsRecyclerAdapter = AllProductsRecyclerAdapter(this@HomeActivity,allProductsViewModel!!,this)
-            allProductsRecyclerView.setLayoutManager(LinearLayoutManager(this@HomeActivity))
-            allProductsRecyclerView.setAdapter(allProductsRecyclerAdapter)
-        }
-        )
+        loadAllProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        //Inflate toolbar menu
         menuInflater.inflate(R.menu.toolbar_menu,menu)
+
+        val searchMenuItem = menu?.findItem(R.id.action_search)
+
+        if (searchMenuItem != null){
+            val searchView = searchMenuItem.actionView as SearchView
+
+            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                   return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+
+                    if(newText!!.isNotEmpty()){
+                        DataManager.tempAllProducts.clear()
+                        val search = newText.lowercase(Locale.getDefault())
+                        DataManager.allProducts.forEach {
+                            if(it.productTitle?.toLowerCase(Locale.getDefault())!!.contains(search)){
+                                DataManager.tempAllProducts.add(it)
+                            }
+                        }
+                        allProductsRecyclerView.adapter?.notifyDataSetChanged()
+                    }
+                    else{
+                        DataManager.tempAllProducts.clear()
+                        DataManager.tempAllProducts.addAll(DataManager.allProducts)
+                        allProductsRecyclerView.adapter?.notifyDataSetChanged()
+                    }
+                   return true
+                }
+
+            })
+        }
         return true
     }
 
-    // Implement camera icon click
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_logout -> {
@@ -100,11 +127,39 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
         }
     }
 
-    override fun onProductClicked(position: Int, product: AllProductsViewModel) {
+    override fun onProductClicked(position: Int, product: AllProducts) {
         val intent = Intent(this, DisplayProductDetailsActivity::class.java)
-        intent.putExtra("recyclerProductId",product.productId)
+        intent.putExtra("recyclerProductId",product.productAdvertsementId)
         intent.putExtra("productOwnerId", product.uid)
         startActivity(intent)
+    }
+
+    fun loadAllProducts(){
+      /*  allProductsRecyclerView.layoutManager = LinearLayoutManager(this)
+        allProductsRecyclerView.adapter = AllProductsRecyclerAdapter(this, DataManager.allProducts,this)*/
+       // allProductsRecyclerView.adapter = AllProductsRecyclerAdapter(this, DataManager.tempAllProducts,this)
+
+        db.collection("products").get()
+            .addOnSuccessListener {
+                val productsSnapshotList = it.documents
+                DataManager.allProducts.clear()
+
+                for(snapshot in productsSnapshotList){
+                    val product = AllProducts(
+                        snapshot.getString("productId").toString(),
+                        snapshot.getString("productTitle").toString(),
+                        snapshot.getString("productDesc").toString(),
+                        snapshot.getString("productPrice").toString(),
+                        snapshot.getString("productImageUri").toString(),
+                        snapshot.getString("userId").toString()
+                    )
+                    DataManager.allProducts.add(product)
+                }
+                allProductsRecyclerView.adapter?.notifyDataSetChanged()
+                DataManager.tempAllProducts.addAll(DataManager.allProducts)
+            }
+        allProductsRecyclerView.adapter = AllProductsRecyclerAdapter(this, DataManager.tempAllProducts,this)
+        allProductsRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
 
@@ -124,12 +179,13 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
     }
 
     private fun displaySplashScreen(){
-        //Call new Activity from fragment
         val intent = Intent(this,SplashActivity::class.java)
         startActivity(intent)
         finish()
-
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        allProductsRecyclerView.adapter?.notifyDataSetChanged()
+    }
 }
