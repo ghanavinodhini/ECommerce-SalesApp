@@ -5,7 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+<!--    <uses-permission android:name="android.permission.CAMERA" />-->
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -20,33 +24,41 @@
         <activity
             android:name=".view.DisplayMessagesActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".view.SendMessageActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".view.DisplayProductDetailsActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".view.HomeActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.CreateAdvertisementActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".view.ImageCaptureDisplayActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".view.ImageGalleryActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".view.SplashActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

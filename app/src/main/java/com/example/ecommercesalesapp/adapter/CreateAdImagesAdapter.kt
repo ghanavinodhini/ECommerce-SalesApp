@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommercesalesapp.R
 import com.example.ecommercesalesapp.databinding.PostadProductimagesViewBinding
@@ -35,10 +37,21 @@ class CreateAdImagesAdapter(var context: Context, val listImages:List<CreateAdIm
 
     inner class createAdImagesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
        val gridImage = itemView.findViewById<ImageView>(R.id.image)
+        val progress = itemView.findViewById<ProgressBar>(R.id.progressBar)
 
         fun bind(imageDisplay:CreateAdImages){
             val uri = Uri.parse(imageDisplay.image)
-            Picasso.with(context).load(uri).into(gridImage)
+            Picasso.with(context).load(uri).into(gridImage,
+                object: com.squareup.picasso.Callback {
+                    override fun onSuccess() {
+                        progress?.visibility = View.GONE
+                    }
+
+                    override fun onError() {
+                        Toast.makeText(context,"Error occurred", Toast.LENGTH_SHORT).show()
+                    }
+
+                })
         }
     }
 

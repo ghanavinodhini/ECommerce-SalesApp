@@ -138,6 +138,10 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
       /*  allProductsRecyclerView.layoutManager = LinearLayoutManager(this)
         allProductsRecyclerView.adapter = AllProductsRecyclerAdapter(this, DataManager.allProducts,this)*/
        // allProductsRecyclerView.adapter = AllProductsRecyclerAdapter(this, DataManager.tempAllProducts,this)
+        DataManager.tempAllProducts.clear()
+
+        allProductsRecyclerView.adapter = AllProductsRecyclerAdapter(this, DataManager.tempAllProducts,this)
+        allProductsRecyclerView.layoutManager = LinearLayoutManager(this)
 
         db.collection("products").get()
             .addOnSuccessListener {
@@ -158,8 +162,8 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
                 allProductsRecyclerView.adapter?.notifyDataSetChanged()
                 DataManager.tempAllProducts.addAll(DataManager.allProducts)
             }
-        allProductsRecyclerView.adapter = AllProductsRecyclerAdapter(this, DataManager.tempAllProducts,this)
-        allProductsRecyclerView.layoutManager = LinearLayoutManager(this)
+       /* allProductsRecyclerView.adapter = AllProductsRecyclerAdapter(this, DataManager.tempAllProducts,this)
+        allProductsRecyclerView.layoutManager = LinearLayoutManager(this)*/
     }
 
 

@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ecommercesalesapp.R
 import com.example.ecommercesalesapp.model.AllProducts
@@ -39,12 +41,24 @@ class AllProductsRecyclerAdapter(private val context: Context, private val produ
         var allProductTitle = itemView.findViewById<TextView>(R.id.allProducts_listView_titleTextView)
         var allProductPrice = itemView.findViewById<TextView>(R.id.allProducts_listView_priceTextView)
         var allProductImage = itemView.findViewById<ImageView>(R.id.allProducts_listView_ImageView)
+        var progress = itemView.findViewById<ProgressBar>(R.id.progressBar)
 
         fun bind(allProductDisplay:AllProducts){
             allProductTitle.setText(allProductDisplay.productTitle)
             allProductPrice.setText(allProductDisplay.productPrice)
             val allProductImageUri = Uri.parse(allProductDisplay.productImageUri)
-            Picasso.with(context).load(allProductImageUri).into(allProductImage)
+            Picasso.with(context).load(allProductImageUri).into(allProductImage,
+
+                object: com.squareup.picasso.Callback {
+                    override fun onSuccess() {
+                        progress?.visibility = View.GONE
+                    }
+
+                    override fun onError() {
+                        Toast.makeText(context,"Error occurred", Toast.LENGTH_SHORT).show()
+                    }
+
+                })
         }
     }
 }

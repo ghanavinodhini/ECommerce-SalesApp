@@ -183,6 +183,5 @@
             app:layout_constraintStart_toEndOf="@+id/registrationFooterTxt"
             app:layout_constraintTop_toBottomOf="@+id/signUpBtn" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
