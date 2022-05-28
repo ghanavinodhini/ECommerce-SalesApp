@@ -39,7 +39,7 @@ class AllMessagesRecyclerAdapter(var context: Context, val messagesList:List<Buy
 
         fun bind(messagesDisplay:BuyerMessage){
             buyerProductTitle.setText(messagesDisplay.buyerInterestedProduct)
-            buyerProductPrice.setText("Offer Price : " + messagesDisplay.buyerBidPrice)
+            buyerProductPrice.setText("Offer Price : " + "$" + messagesDisplay.buyerBidPrice)
             buyerProductMessage.setText(messagesDisplay.buyerMessage)
             buyerEmail.setText("Contact : " + messagesDisplay.buyerEmail)
         }

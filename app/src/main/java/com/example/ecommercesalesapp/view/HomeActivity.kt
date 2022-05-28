@@ -28,7 +28,7 @@ import java.util.*
 class HomeActivity : AppCompatActivity(),onProductClickListener {
     lateinit var userNameTextView:TextView
     lateinit var postAdButton : Button
-    lateinit var messagesButton: ImageButton
+    //lateinit var messagesButton: ImageButton
     lateinit var currentUserName : String
     lateinit var loginRegisterViewModel: LoginRegisterViewModel
     lateinit var db: FirebaseFirestore
@@ -42,7 +42,7 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
 
         userNameTextView = findViewById(R.id.userNameTextView)
         postAdButton = findViewById(R.id.postAdbutton)
-        messagesButton = findViewById(R.id.messagesButton)
+        //messagesButton = findViewById(R.id.messagesButton)
         allProductsRecyclerView = findViewById(R.id.allProductsRecyclerView)
 
 
@@ -57,7 +57,7 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
             if(it != null){
                 Log.d("!!!","Inside home activity loginRegisterviewmodel getfirebaselivedata")
                 //currentUserName = loginRegisterViewModel.getUserName()
-                userNameTextView.setText("WELCOME " + it.email?.uppercase(Locale.getDefault()))
+                userNameTextView.setText(it.email?.uppercase(Locale.getDefault()))
                 //userNameTextView.setText("WELCOME " + currentUserName.toUpperCase())
             }
         })
@@ -73,9 +73,9 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
             displayCreateAdvertisement()
         }
 
-        messagesButton.setOnClickListener {
+        /*messagesButton.setOnClickListener {
             displayMessages()
-        }
+        }*/
         loadAllProducts()
     }
 
@@ -118,7 +118,12 @@ class HomeActivity : AppCompatActivity(),onProductClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        return when (item.itemId)
+        {
+            R.id.action_messages -> {
+                displayMessages()
+                true
+            }
             R.id.action_logout -> {
                 loginRegisterViewModel.logout()
                 true

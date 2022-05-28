@@ -58,7 +58,7 @@
         android:ems="10"
         android:inputType="number|numberDecimal"
         android:minHeight="48dp"
-        android:hint="ENTER PRODUCT PRICE"
+        android:hint=" PRODUCT PRICE: $"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

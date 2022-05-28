@@ -45,7 +45,7 @@ class AllProductsRecyclerAdapter(private val context: Context, private val produ
 
         fun bind(allProductDisplay:AllProducts){
             allProductTitle.setText(allProductDisplay.productTitle)
-            allProductPrice.setText(allProductDisplay.productPrice)
+            allProductPrice.setText("$" + allProductDisplay.productPrice)
             val allProductImageUri = Uri.parse(allProductDisplay.productImageUri)
             Picasso.with(context).load(allProductImageUri).into(allProductImage,
 

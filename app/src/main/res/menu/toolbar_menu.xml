@@ -8,7 +8,11 @@
         android:icon="@drawable/ic_baseline_search"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView">
-
+    </item>
+    <item
+        android:id="@+id/action_messages"
+        app:showAsAction="never"
+        android:title="Messages">
     </item>
     <item
         android:id="@+id/action_logout"
