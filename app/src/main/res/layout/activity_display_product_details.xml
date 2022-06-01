@@ -40,10 +40,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/edit_text_border"
-        android:minHeight="48dp"
-        android:textAlignment="center"
-        android:gravity="center"
+        android:background="@color/appBackgroundColor"
+        android:textColor="@color/btnColor"
+        android:textStyle="bold"
+        android:textSize="16sp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageCarouselView" />
@@ -53,12 +54,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/edit_text_border"
-        android:minHeight="48dp"
-        android:textAlignment="center"
-        android:gravity="center"
+        android:background="@color/appBackgroundColor"
+
+        android:textAlignment="textStart"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/btnColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productTitle" />
@@ -67,33 +70,40 @@
         android:id="@+id/productDesc"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:padding="5dp"
         android:scrollbarAlwaysDrawHorizontalTrack="true"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:gravity="center"
-        android:background="@drawable/edit_text_border"
+        android:textColor="@color/btnColor"
+        android:background="@color/cardColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productPrice" />
 
-    <Button
+        <com.google.android.material.button.MaterialButton
         android:id="@+id/bidButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="BID"
+        android:backgroundTint="@color/btnColor"
+        android:textColor="@color/btnTextColor"
+        android:text="Bid"
+            android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productDesc" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="OK"
+            android:text="Ok"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/btnColor"
+            android:textColor="@color/btnTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bidButton" />

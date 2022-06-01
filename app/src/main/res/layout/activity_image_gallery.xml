@@ -18,54 +18,63 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/splashimage" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/previousButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
+        android:backgroundTint="@color/btnColor"
         android:layout_marginTop="112dp"
         android:text="Previous"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/galleryImageSwitcher" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/nextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="112dp"
         android:layout_marginEnd="68dp"
+        android:backgroundTint="@color/btnColor"
         android:text="Next"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/galleryImageSwitcher" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/gallerySelectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="116dp"
-        android:text="SELECT FROM GALLERY"
+        android:backgroundTint="@color/btnColor"
+        android:text="Select from Gallery"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/okGalleryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="164dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:text="OK"
+        android:backgroundTint="@color/btnColor"
+        android:text="Ok"
+        android:textAllCaps="false"
         app:layout_constraintTop_toBottomOf="@id/gallerySelectButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/openCameraButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="116dp"
-        android:text="OPEN CAMERA"
+        android:backgroundTint="@color/btnColor"
+        android:text="Open Camera"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gallerySelectButton"
         app:layout_constraintHorizontal_bias="0.484"

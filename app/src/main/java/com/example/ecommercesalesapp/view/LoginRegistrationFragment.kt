@@ -84,7 +84,7 @@ class LoginRegistrationFragment : Fragment() {
     }
 
     fun displayFragemntByValue(profileValue: String) {
-        if (profileValue == "SignUp") {
+        if (profileValue == "Signup") {
             nameTxtView.isVisible = true
             emailTxt.isVisible = true
             passwordTxtView.isVisible = true

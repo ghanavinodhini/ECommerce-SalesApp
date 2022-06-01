@@ -11,6 +11,8 @@
     <!-- Colors Used for App -->
     <color name="appBackgroundColor">#9ED9FA</color>
     <color name="btnColor">#16534F</color>
-    <color name="btnTextColor">#F85858</color>
+  <!--  <color name="btnTextColor">#F85858</color> -->
+    <color name="btnTextColor">#FFFFFFFF</color>
     <color name="hintColor">#918D8D</color>
+    <color name="cardColor">#7dc1e8</color>
 </resources>

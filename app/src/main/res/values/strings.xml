@@ -2,19 +2,19 @@
     <!-- Strings related to Splash Screen -->
     <string name="app_name">Ecommerce SalesApp</string>
     <string name="splashText">Buy and Sell Products</string>
-    <string name="splashButtonText">GET STARTED</string>
+    <string name="splashButtonText">Get Started</string>
     <!-- Strings related to login screen-->
     <string name="nameTxtView">Enter Your Name</string>
     <string name="emailTxtView">Enter Your Email</string>
     <string name="passwordTxtView">Enter Your Password</string>
     <string name="confirmPwdTxtView">Confirm Password</string>
-    <string name="signUpBtnTxt">SIGNUP</string>
-    <string name="loginBtnTxt">LOGIN</string>
-    <string name="logoutBtnTxt">LOGOUT</string>
-    <string name="registrationFooterTxt">Already Have an Account?</string>
-    <string name="registrationFooterNoAct">Dont Have an Account?</string>
-    <string name="registratonFooterLoginTxt"><u>LOGIN</u></string>
-    <string name="registrationFooterSignupTxt"><u>SIGNUP</u></string>
+    <string name="signUpBtnTxt">Signup</string>
+    <string name="loginBtnTxt">Login</string>
+    <string name="logoutBtnTxt">Logout</string>
+    <string name="registrationFooterTxt">Already have an account?</string>
+    <string name="registrationFooterNoAct">"Don't have an account?"</string>
+    <string name="registratonFooterLoginTxt"><u>Login</u></string>
+    <string name="registrationFooterSignupTxt"><u>Signup</u></string>
 
     <string name="permission_required">Camera access is required to display the camera preview.</string>
     <string name="ok">OK</string>
