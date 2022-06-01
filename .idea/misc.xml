@@ -5,11 +5,13 @@
       <map>
         <entry key="app/src/main/res/drawable/buttonborder.xml" value="0.103257328990228" />
         <entry key="app/src/main/res/drawable/ic_baseline_chevron_right_24.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_display_product_details.xml" value="0.12284701114488349" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.14895833333333333" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/allproducts_list_view.xml" value="0.18" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_login_registration.xml" value="0.14" />
+        <entry key="app/src/main/res/layout/messages_list_view.xml" value="0.12284701114488349" />
       </map>
     </option>
   </component>

@@ -120,7 +120,7 @@ class DisplayProductDetailsActivity : AppCompatActivity() {
 
     fun displayProductDetails(productTitle:String, productPrice:String, productDesc:String){
         this.productTitle.text = productTitle
-        this.productPrice.text = productPrice
+        this.productPrice.text = "$ "+ productPrice
         this.productDesc.text = productDesc
     }
 
