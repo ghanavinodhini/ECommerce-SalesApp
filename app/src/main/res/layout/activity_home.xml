@@ -8,7 +8,7 @@
 
 <ImageView
     android:id="@+id/personImageView"
-    android:layout_width="50dp"
+    android:layout_width="30dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
@@ -19,7 +19,7 @@
         android:id="@+id/userNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginTop="8dp"
         android:text=""
         android:textAllCaps="false"
